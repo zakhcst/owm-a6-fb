@@ -1,0 +1,22 @@
+<mat-form-field>
+  <mat-select placeholder="Capital" [(value)]="selectedCityId" (selectionChange)="onChange($event)">
+    <mat-option *ngFor="let city of cities$ | async" [value]="city.id">
+      {{city.iso2}}, {{city.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- 
+{{selectedCityId}}
+<ul>
+  <li *ngFor="let city of cities$ | async">
+    {{city | json}}
+  </li>
+</ul>
+weatherData$:{{weatherData$ | async | json}} -->
+
+<mat-card>
+  <div class="weather-forecast-header">
+    5 DAY WEATHER FORECAST
+  </div>
+</mat-card>
