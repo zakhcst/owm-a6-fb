@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
-import { ConstantsService } from './constants.service';
-import { switchMap, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
 
@@ -10,11 +8,7 @@ import { DataService } from './data.service';
   providedIn: 'root'
 })
 export class OwmDataService {
-  constructor(
-    private _db: AngularFireDatabase,
-    private _owm: OwmService,
-    private _data: DataService
-  ) {}
+  constructor(private _owm: OwmService, private _data: DataService) {}
 
   setListByDate(data) {
     data = data || { list: [] };
@@ -31,34 +25,31 @@ export class OwmDataService {
       }
       return accumulator;
     }, {});
+    data.updated = new Date().valueOf();
     return data;
   }
 
-  checkExpired(data) {
+  public isExpired(data): boolean {
     // expired data is when [0] is older than 3 hours
     const now = new Date().valueOf();
-    const fb0 = data.list[0].dt * 1000;
-    const diff = now - fb0;
-    return diff < 3 * 3600 * 1000;
+    const firstSample = data.list[0].dt * 1000;
+    const diff = now - (data.updated || firstSample);
+    return diff > 3 * 3600 * 1000; // 3 hours
   }
 
   getData(cityId) {
+    console.log('getData OwmDataService')
     return this._data.getData(cityId).pipe(
       switchMap(
         (fbdata: any) => {
-          if (fbdata === null || this.checkExpired(fbdata)) {
-            console.log('(fbdata === null || this.checkExpired(fbdata))');
-            console.log(fbdata);
-            console.log(this.checkExpired(fbdata));
-            return this._owm.getDefaultData(cityId).pipe(
-              map(res => this.setListByDate(res)),
-              switchMap(res => this._data.setData(cityId, res)),
-              switchMap(r => this._data.getData(cityId))
+          if (fbdata === null || this.isExpired(fbdata)) {
+            // return this._owm.getDefaultData(cityId).pipe(
+            return this._owm.getData(cityId).pipe(
+              switchMap(res => of(this.setListByDate(res))),
+              switchMap(res => of(this._data.setData(cityId, res))),
+              switchMap(() => this._data.getData(cityId))
             );
           }
-          console.log(
-            'pass through ! (fbdata === null || this.checkExpired(fbdata))'
-          );
           return of(fbdata);
         }
         // Error handling...

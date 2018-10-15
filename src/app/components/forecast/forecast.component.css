@@ -1,5 +1,101 @@
-.weather-forecast-header {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 20px;
-  text-align: center;
+.forecast-card {
+  height: 95vh;
+  padding: 5px;
+  background-color: rgb(153, 180, 255);
+}
+
+.content {
+  font-size: 16px;
+}
+
+.scroll-this {
+  overflow: auto;
+}
+
+.table-data_cell-background {
+  min-width: 115px;
+  margin: 2px;
+  padding: 5px;
+  background-color: rgb(100, 141, 253);
+}
+
+.table-data_cell_empty-background {
+  min-width: 115px;
+  margin: 2px;
+}
+
+.table-header-background {
+  min-width: 115px;
+  margin: 2px;
+  /* background-color: rgb(232, 235, 180); */
+  background-color: rgba(119, 139, 255, 0.575);
+}
+
+.table-00-background {
+  margin: 2px;
+  padding: 5px;
+}
+
+.table-date_cell-background {
+  margin: 2px;
+  background-color: rgba(119, 139, 255, 0.575);
+}
+
+.table-secondary_data-opacity {
+  opacity: 0.4;
+}
+
+@media only screen {
+  .content {
+    font-size: 60%;
+  }
+
+  img {
+    width: 40%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-device-width: 600px) {
+  .content {
+    font-size: 80%;
+  }
+
+  img {
+    width: 40%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-device-height: 600px) {
+  .content {
+    font-size: 80%;
+  }
+
+  img {
+    width: 40%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-device-width: 1000px) {
+  .content {
+    font-size: 90%;
+  }
+
+  img {
+    width: 50%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-device-width: 1300px) {
+  .content {
+    font-size: 100%;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+  }
 }

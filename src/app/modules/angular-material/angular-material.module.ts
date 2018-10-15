@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   MatSelectModule,
+  MatProgressSpinnerModule,
   MatCardModule
   // MatTableModule,
   // MatButtonModule,
@@ -17,7 +18,12 @@ import {
 } from '@angular/material';
 
 @NgModule({
-  imports: [CommonModule, MatSelectModule, MatCardModule],
-  exports: [MatSelectModule, MatCardModule]
+  imports: [
+    CommonModule,
+    MatSelectModule,
+    MatProgressSpinnerModule,
+    MatCardModule
+  ],
+  exports: [MatSelectModule, MatProgressSpinnerModule, MatCardModule]
 })
 export class AngularMaterialModule {}

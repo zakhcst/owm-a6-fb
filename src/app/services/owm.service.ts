@@ -9,9 +9,12 @@ export class OwmService {
   constructor(private _http: HttpClient) {}
 
   getDefaultData(cityId) {
-    return this._http.get<any>('owm-data-sample.json');
+    console.log('owm getDefaultData');
+    return this._http.get<any>(ConstantsService.defaultOwmData);
   }
+
   getData(cityId) {
+    console.log('owm getData');
     const fullUrl =
       ConstantsService.default5DayForecastUrl +
       '?id=' +
