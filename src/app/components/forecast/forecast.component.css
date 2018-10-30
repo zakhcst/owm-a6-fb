@@ -12,13 +12,6 @@
   overflow: auto;
 }
 
-.table-data_cell-background {
-  min-width: 115px;
-  margin: 2px;
-  padding: 5px;
-  background-color: rgb(100, 141, 253);
-}
-
 .table-data_cell_empty-background {
   min-width: 115px;
   margin: 2px;
@@ -27,23 +20,30 @@
 .table-header-background {
   min-width: 115px;
   margin: 2px;
-  /* background-color: rgb(232, 235, 180); */
   background-color: rgba(119, 139, 255, 0.575);
 }
 
 .table-00-background {
-  margin: 2px;
-  padding: 5px;
+  padding: 5px 2px;
 }
 
 .table-date_cell-background {
   margin: 2px;
-  background-color: rgba(119, 139, 255, 0.575);
+  padding: 5px 2px;
+}
+
+.table-data_cell-background {
+  min-width: 115px;
+  margin: 2px;
+  padding: 2px 0 0 0;
+  background-color: rgb(100, 141, 253);
 }
 
 .table-secondary_data-opacity {
-  opacity: 0.4;
+  opacity: 0.6;
+  margin: 2px 0 2px 0;
 }
+
 
 @media only screen {
   .content {
@@ -51,14 +51,14 @@
   }
 
   img {
-    width: 40%;
+    width: 10%;
     height: auto;
   }
 }
 
-@media only screen and (min-device-width: 600px) {
+@media only screen and (min-width: 600px) {
   .content {
-    font-size: 80%;
+    font-size: 70%;
   }
 
   img {
@@ -67,20 +67,9 @@
   }
 }
 
-@media only screen and (min-device-height: 600px) {
+@media only screen and (min-width: 1000px) {
   .content {
-    font-size: 80%;
-  }
-
-  img {
-    width: 40%;
-    height: auto;
-  }
-}
-
-@media only screen and (min-device-width: 1000px) {
-  .content {
-    font-size: 90%;
+    font-size: 75%;
   }
 
   img {
@@ -89,13 +78,59 @@
   }
 }
 
-@media only screen and (min-device-width: 1300px) {
+@media only screen and (min-width: 1300px) {
   .content {
-    font-size: 100%;
+    font-size: 80%;
   }
 
   img {
-    width: 100%;
+    width: 75%;
+    height: auto;
+  }
+}
+
+@media only screen and (max-height: 400px) {
+  .content {
+    font-size: 50%;
+  }
+
+  img {
+    width: 10%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-height: 400px) {
+  img {
+    width: 15%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-height: 600px) {
+  img {
+    width: 20%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-height: 700px) {
+  img {
+    width: 25%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-height: 800px) {
+  img {
+    width: 30%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-height: 900px) {
+  img {
+    width: 50%;
     height: auto;
   }
 }

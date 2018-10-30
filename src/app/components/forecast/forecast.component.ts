@@ -12,7 +12,6 @@ import { CitiesService } from '../../services/cities.service';
 export class ForecastComponent implements OnInit {
   selectedCityId: number;
   cities$: Observable<any>;
-  // weatherData$;
   weatherData;
   data: any;
   weatherDataSubscription: Subscription;
