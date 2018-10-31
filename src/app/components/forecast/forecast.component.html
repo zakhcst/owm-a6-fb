@@ -33,8 +33,8 @@
 
     <div fxFlex fxLayout="row" [fxHide]="loading" class="scroll-this">
 
-      <div fxFlex="7%" fxLayout="column" fxFill>
-        <div fxFlex="10%" fxLayout="column" class="table-00-background">
+      <div fxFlex="8%" fxLayout="column" fxFill>
+        <div fxFlex="10%" fxFlex.gt-sm="7%" fxLayout="column" class="table-00-background">
           <span fxLayoutAlign="end center">Hour</span>
           <div fxFlex></div>
           <span fxLayoutAlign="start start">Date</span>
@@ -56,7 +56,7 @@
 
       <div fxFlex fxLayout="column" class="scroll-this">
 
-        <div fxFlex="10%" fxLayout="row">
+        <div fxFlex="10%" fxFlex.gt-sm="7%" fxLayout="row">
           <span fxFlex fxLayoutAlign="center center" class="table-header-background" *ngFor="let hour of hoursTemplate.hours; index as ind"
             [ngStyle]="{'background-color': hoursTemplate.colors[ind], 'color': (ind < 3 || ind > 6 ? 'white': 'black')}">
             {{(hour > 9 ? '' : '0' ) + hour + ':00' }}
@@ -68,49 +68,53 @@
           <span fxFlex fxLayout="row" *ngFor="let hour of hoursTemplate.hours; index as ind">
             <span fxFlex class="table-data_cell_empty-background" *ngIf="!dataDaily.value[hour]"></span>
             <span fxFlex
-                *ngIf="dataDaily.value[hour]" class="table-data_cell-background"
-                [ngStyle]="{'background-color': hoursTemplate.colors[ind], 'color': (ind < 3 || ind > 6 ? 'white': 'black')}"
-                fxLayout="column"
-                fxLayoutAlign="center center">
+            *ngIf="dataDaily.value[hour]"
+            class="table-data_cell-background"
+            [ngStyle]="{'background-color': hoursTemplate.colors[ind], 'color': (ind < 3 || ind > 6 ? 'white': 'black')}"
+              fxLayout="column" fxLayoutAlign="center center">
 
               <div fxLayout="row" fxLayoutAlign="center center">
-                <img fxHide.xs [src]="iconsUrl + dataDaily.value[hour].weather[0].icon + '.png'">
-                  {{dataDaily.value[hour].weather[0].main }} {{dataDaily.value[hour].main.temp | number:'1.0-0'}}&#176;C
+                <img [src]="iconsUrl + dataDaily.value[hour].weather[0].icon + '.png'">
+                {{dataDaily.value[hour].weather[0].main }} {{dataDaily.value[hour].main.temp | number:'1.0-0'}}&#176;C
               </div>
 
-              <div fxLayout="column">
-                <span fxFlex="33%" fxLayout="row" fxHide.xs class="table-secondary_data-opacity" fxLayoutAlign="start end">
-                  <img fxHide.xs [src]="iconPressure">
-                  <span fxFlex="50%" fxLayoutAlign="end end">
-                    &nbsp;{{dataDaily.value[hour].main.pressure | number:'1.0-0'}}
-                  </span>
-                  <span fxFlex fxLayoutAlign="start end">
-                    &nbsp;<small>mm</small>
-                  </span>
-                </span>
-
-                <span fxFlex="33%" fxLayout="row" fxHide.xs class="table-secondary_data-opacity" fxLayoutAlign="start end">
-                  <img fxHide.xs [src]="iconWind">
-
-                  <span fxFlex="50%" fxLayoutAlign="end end">
-                    &nbsp;{{dataDaily.value[hour].wind.speed | number:'1.0-0'}}
-                  </span>
-                  <span fxFlex fxLayoutAlign="start end">
-                    &nbsp;<small>m/s</small>
+              <span fxLayout="column">
+                <span fxFlex="25%" fxLayout="row" fxHide.xs fxLayoutAlign="start end" class="table-secondary_data_line">
+                  <img [src]="iconPressure">
+                  <span fxFill class="table-secondary_data-opacity">
+                    <span fxFlex="50%" fxLayoutAlign="end end">
+                      &nbsp;{{dataDaily.value[hour].main.pressure | number:'1.0-0'}}
+                    </span>
+                    <span fxFlex fxLayoutAlign="start end">
+                      &nbsp;<small>mm</small>
+                    </span>
                   </span>
                 </span>
 
-                <span fxFlex="33%" fxLayout="row" fxHide.xs class="table-secondary_data-opacity" fxLayoutAlign="start end">
-                  <img fxHide.xs [src]="iconHumidity">
-
-                  <span fxFlex="50%" fxLayoutAlign="end end">
-                    &nbsp;{{dataDaily.value[hour].main.humidity | number:'1.0-0'}}
-                  </span>
-                  <span fxFlex fxLayoutAlign="start end">
-                    &nbsp;<small>%</small>&nbsp;
+                <span fxFlex="25%" fxLayout="row" fxHide.xs fxLayoutAlign="start end" class="table-secondary_data_line">
+                  <img [src]="iconWind">
+                  <span fxFill class="table-secondary_data-opacity">
+                    <span fxFlex="50%" fxLayoutAlign="end end">
+                      &nbsp;{{dataDaily.value[hour].wind.speed | number:'1.0-0'}}
+                    </span>
+                    <span fxFlex fxLayoutAlign="start end">
+                      &nbsp;<small>m/s</small>
+                    </span>
                   </span>
                 </span>
-              </div>
+
+                <span fxFlex="25%" fxLayout="row" fxHide.xs fxLayoutAlign="start end" class="table-secondary_data_line">
+                  <img [src]="iconHumidity">
+                  <span fxFill class="table-secondary_data-opacity">
+                    <span fxFlex="50%" fxLayoutAlign="end end">
+                      &nbsp;{{dataDaily.value[hour].main.humidity | number:'1.0-0'}}
+                    </span>
+                    <span fxFlex fxLayoutAlign="start end">
+                      &nbsp;<small>%</small>&nbsp;
+                    </span>
+                  </span>
+                </span>
+              </span>
             </span>
           </span>
         </div>

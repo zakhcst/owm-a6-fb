@@ -19,7 +19,6 @@ export class ForecastComponent implements OnInit {
   hoursTemplate: HoursTemplate;
   hoursBGTemplate: string[];
   iconsUrl: string;
-  iconTemp: string;
   iconWind: string;
   iconHumidity: string;
   iconPressure: string;
@@ -31,7 +30,6 @@ export class ForecastComponent implements OnInit {
     this.selectedCityId = ConstantsService.defaultCityId;
     this.hoursTemplate = ConstantsService.hoursTemplate;
     this.iconsUrl = ConstantsService.owmIconsUrl;
-    this.iconTemp = ConstantsService.tempIconsUrl;
     this.iconWind = ConstantsService.windIconsUrl;
     this.iconPressure = ConstantsService.pressureIconsUrl;
     this.iconHumidity = ConstantsService.humidityIconsUrl;

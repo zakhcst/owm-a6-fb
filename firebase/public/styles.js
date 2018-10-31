@@ -539,7 +539,7 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sdr/tests/owm-a6-fb/src/styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! /home/sdr/projects/owm-a6-fb/src/styles.css */"./src/styles.css");
 
 
 /***/ })
