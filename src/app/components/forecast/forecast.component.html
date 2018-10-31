@@ -8,7 +8,7 @@
           |
           date: 'EEE dd MMM HH:mm'}}
           <br>
-          {{'Time slots: ' + weatherData?.cnt}}
+          {{'Forecast time slots: ' + weatherData?.cnt}}
         </span>
       </span>
       <h4 fxFlex="1 1" fxLayout="column" fxLayoutAlign="center center">
@@ -33,8 +33,8 @@
 
     <div fxFlex fxLayout="row" [fxHide]="loading" class="scroll-this">
 
-      <div fxFlex="10%" fxLayout="column" fxFill>
-        <div fxFlex="5%" fxLayout="column" class="table-00-background">
+      <div fxFlex="7%" fxLayout="column" fxFill>
+        <div fxFlex="10%" fxLayout="column" class="table-00-background">
           <span fxLayoutAlign="end center">Hour</span>
           <div fxFlex></div>
           <span fxLayoutAlign="start start">Date</span>
@@ -56,22 +56,26 @@
 
       <div fxFlex fxLayout="column" class="scroll-this">
 
-        <div fxFlex="5%" fxLayout="row">
-          <span fxFlex fxLayoutAlign="center center" class="table-header-background" *ngFor="let hour of hoursTemplate">
+        <div fxFlex="10%" fxLayout="row">
+          <span fxFlex fxLayoutAlign="center center" class="table-header-background" *ngFor="let hour of hoursTemplate.hours; index as ind"
+            [ngStyle]="{'background-color': hoursTemplate.colors[ind], 'color': (ind < 3 || ind > 6 ? 'white': 'black')}">
             {{(hour > 9 ? '' : '0' ) + hour + ':00' }}
           </span>
         </div>
 
         <div fxFlex *ngFor="let dataDaily of weatherData?.listByDate | keyvalue; index as $index;">
 
-          <span fxFlex fxLayout="row" *ngFor="let hour of hoursTemplate">
+          <span fxFlex fxLayout="row" *ngFor="let hour of hoursTemplate.hours; index as ind">
             <span fxFlex class="table-data_cell_empty-background" *ngIf="!dataDaily.value[hour]"></span>
-            <span fxFlex *ngIf="dataDaily.value[hour]" class="table-data_cell-background" fxLayout="column"
-              fxLayoutAlign="center center">
+            <span fxFlex
+                *ngIf="dataDaily.value[hour]" class="table-data_cell-background"
+                [ngStyle]="{'background-color': hoursTemplate.colors[ind], 'color': (ind < 3 || ind > 6 ? 'white': 'black')}"
+                fxLayout="column"
+                fxLayoutAlign="center center">
 
               <div fxLayout="row" fxLayoutAlign="center center">
                 <img fxHide.xs [src]="iconsUrl + dataDaily.value[hour].weather[0].icon + '.png'">
-                {{dataDaily.value[hour].weather[0].main }} {{dataDaily.value[hour].main.temp | number:'1.0-0'}}&#176;C
+                  {{dataDaily.value[hour].weather[0].main }} {{dataDaily.value[hour].main.temp | number:'1.0-0'}}&#176;C
               </div>
 
               <div fxLayout="column">

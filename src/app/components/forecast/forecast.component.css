@@ -1,7 +1,7 @@
 .forecast-card {
   height: 95vh;
   padding: 5px;
-  background-color: rgb(153, 180, 255);
+  background-color: rgb(132, 162, 243);
 }
 
 .content {
@@ -36,7 +36,7 @@
   min-width: 115px;
   margin: 2px;
   padding: 2px 0 0 0;
-  background-color: rgb(100, 141, 253);
+  /* background-color: rgb(100, 141, 253); */
 }
 
 .table-secondary_data-opacity {
