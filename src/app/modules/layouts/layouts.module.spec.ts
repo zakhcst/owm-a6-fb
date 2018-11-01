@@ -1,13 +1,13 @@
-import { LayoutsModule } from './layouts.module';
+import { LayoutsModules } from './layouts.module';
 
 describe('LayoutsModule', () => {
-  let layoutsModule: LayoutsModule;
+  let layoutsModules = LayoutsModules;
 
   beforeEach(() => {
-    layoutsModule = new LayoutsModule();
+    layoutsModules = LayoutsModules;
   });
 
   it('should create an instance', () => {
-    expect(layoutsModule).toBeTruthy();
+    expect(layoutsModules).toBeTruthy();
   });
 });

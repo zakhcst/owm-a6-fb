@@ -1,12 +1,16 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { ForecastComponent } from './components/forecast/forecast.component';
+import { AppModules } from './modules/testing';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent,
+        ForecastComponent
       ],
+      imports: [AppModules]
     }).compileComponents();
   }));
 
@@ -22,10 +26,4 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('owm-a6-fb');
   });
 
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to owm-a6-fb!');
-  });
 });

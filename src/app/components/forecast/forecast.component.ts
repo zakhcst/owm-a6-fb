@@ -11,39 +11,30 @@ import { TimeTemplate } from '../../models/hours.model';
   styleUrls: ['./forecast.component.css']
 })
 export class ForecastComponent implements OnInit {
-  selectedCityId: number;
+  selectedCityId: number = ConstantsService.defaultCityId;
+  timeTemplate: TimeTemplate[] = ConstantsService.timeTemplate;
+  iconsUrl: string = ConstantsService.owmIconsUrl;
+  iconWind: string = ConstantsService.windIconsUrl;
+  iconHumidity: string = ConstantsService.humidityIconsUrl;
+  iconPressure: string = ConstantsService.pressureIconsUrl;
+  loading: boolean;
+  weatherDataSubscription$: Subscription;
   cities$: Observable<any>;
   weatherData;
-  data: any;
-  weatherDataSubscription: Subscription;
-  timeTemplate: TimeTemplate[];
-  iconsUrl: string;
-  iconWind: string;
-  iconHumidity: string;
-  iconPressure: string;
-  isExpired: any;
-  loading: boolean;
 
   constructor(private _cities: CitiesService, private _data: OwmDataService) {
     this.cities$ = _cities.getData();
-    this.selectedCityId = ConstantsService.defaultCityId;
-    this.timeTemplate = ConstantsService.timeTemplate;
-    this.iconsUrl = ConstantsService.owmIconsUrl;
-    this.iconWind = ConstantsService.windIconsUrl;
-    this.iconPressure = ConstantsService.pressureIconsUrl;
-    this.iconHumidity = ConstantsService.humidityIconsUrl;
-    this.data = _data;
     this.onChange();
   }
   ngOnInit() {}
 
   onChange() {
     this.loading = true;
-    this.weatherDataSubscription = this._data
+    this.weatherDataSubscription$ = this._data
       .getData(this.selectedCityId)
       .subscribe(data => {
         this.weatherData = data;
-        this.weatherDataSubscription.unsubscribe();
+        this.weatherDataSubscription$.unsubscribe();
         this.loading = false;
       });
   }

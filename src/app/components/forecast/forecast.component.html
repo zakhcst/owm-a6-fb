@@ -68,10 +68,11 @@
           <span fxFlex fxLayout="row" *ngFor="let timeSlot of timeTemplate; index as ind">
             <span fxFlex class="table-data_cell_empty-background" *ngIf="!dataDaily.value[timeSlot.hour]"></span>
             <span fxFlex
-              *ngIf="dataDaily.value[timeSlot.hour]"
-              class="table-data_cell-background"
-              [ngStyle]="{'background-color': timeTemplate[ind].bgColor, 'color': timeTemplate[ind].textColor}"
-              fxLayout="column" fxLayoutAlign="center center">
+                *ngIf="dataDaily.value[timeSlot.hour]"
+                class="table-data_cell-background"
+                [ngStyle]="{'background-color': timeTemplate[ind].bgColor, 'color': timeTemplate[ind].textColor}"
+                fxLayout="column"
+                fxLayoutAlign="center center">
 
               <div fxLayout="row" fxLayoutAlign="center center">
                 <img [src]="iconsUrl + dataDaily.value[timeSlot.hour].weather[0].icon + '.png'">

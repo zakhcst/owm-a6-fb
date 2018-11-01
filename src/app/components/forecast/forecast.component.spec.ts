@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { AppModules } from '../../modules/testing';
 import { ForecastComponent } from './forecast.component';
 
 describe('ForecastComponent', () => {
@@ -8,7 +8,8 @@ describe('ForecastComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForecastComponent ]
+      declarations: [ForecastComponent],
+      imports: [AppModules]
     })
     .compileComponents();
   }));
