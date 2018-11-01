@@ -3,7 +3,7 @@ import { OwmDataService } from '../../services/owm-data.service';
 import { Observable, Subscription } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { CitiesService } from '../../services/cities.service';
-import { HoursTemplate } from '../../models/hours.model';
+import { TimeTemplate } from '../../models/hours.model';
 
 @Component({
   selector: 'app-forecast',
@@ -16,8 +16,7 @@ export class ForecastComponent implements OnInit {
   weatherData;
   data: any;
   weatherDataSubscription: Subscription;
-  hoursTemplate: HoursTemplate;
-  hoursBGTemplate: string[];
+  timeTemplate: TimeTemplate[];
   iconsUrl: string;
   iconWind: string;
   iconHumidity: string;
@@ -28,7 +27,7 @@ export class ForecastComponent implements OnInit {
   constructor(private _cities: CitiesService, private _data: OwmDataService) {
     this.cities$ = _cities.getData();
     this.selectedCityId = ConstantsService.defaultCityId;
-    this.hoursTemplate = ConstantsService.hoursTemplate;
+    this.timeTemplate = ConstantsService.timeTemplate;
     this.iconsUrl = ConstantsService.owmIconsUrl;
     this.iconWind = ConstantsService.windIconsUrl;
     this.iconPressure = ConstantsService.pressureIconsUrl;

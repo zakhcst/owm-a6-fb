@@ -1,4 +1,5 @@
-export interface HoursTemplate {
-  hours: number[];
-  colors: string[];
+export interface TimeTemplate {
+  hour: number;
+  bgColor: string;
+  textColor: string;
 }
