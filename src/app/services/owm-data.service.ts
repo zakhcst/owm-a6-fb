@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
 
@@ -37,29 +37,26 @@ export class OwmDataService {
     return diff > 3 * 3600 * 1000; // 3 hours
   }
 
+  // The additional logic is introduced
+  // to cache the data for 3 hours and then on request to get new data.
+  // All in order to prevent hitting OWM servers
+  // exessively and above the dev quote.
   getData(cityId) {
-    console.log('getData OwmDataService')
     return this._data.getData(cityId).pipe(
-      switchMap(
-        (fbdata: any) => {
-          if (fbdata === null || this.isExpired(fbdata)) {
-            // return this._owm.getDefaultData(cityId).pipe(
-            return this._owm.getData(cityId).pipe(
-              switchMap(res => of(this.setListByDate(res))),
-              switchMap(res => of(this._data.setData(cityId, res))),
-              switchMap(() => this._data.getData(cityId))
-            );
-          }
-          return of(fbdata);
+      switchMap((fbdata: any) => {
+        if (fbdata === null || this.isExpired(fbdata)) {
+          return this._owm.getData(cityId).pipe(
+            switchMap(res => of(this.setListByDate(res))),
+            switchMap(res => of(this._data.setData(cityId, res))),
+            switchMap(() => this._data.getData(cityId))
+          );
         }
-        // Error handling...
-        // ,
-        // catchError(e => {
-        //   console.log('ERR switchMap 1', e);
-        //   return of(e);
-        // }
-        // )
-      )
+        return of(fbdata);
+      }),
+      catchError(e => {
+        console.log('ERR Fetching data', e);
+        return of(e);
+      })
     );
   }
 }

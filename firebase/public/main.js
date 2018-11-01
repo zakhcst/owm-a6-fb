@@ -512,24 +512,21 @@ var OwmDataService = /** @class */ (function () {
         var diff = now - (data.updated || firstSample);
         return diff > 3 * 3600 * 1000; // 3 hours
     };
+    // The additional logic is introduced
+    // to cache the data for 3 hours and then on request to get new data.
+    // All in order to prevent hitting OWM servers
+    // exessively and above the dev quote.
     OwmDataService.prototype.getData = function (cityId) {
         var _this = this;
-        console.log('getData OwmDataService');
         return this._data.getData(cityId).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (fbdata) {
             if (fbdata === null || _this.isExpired(fbdata)) {
-                // return this._owm.getDefaultData(cityId).pipe(
                 return _this._owm.getData(cityId).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (res) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(_this.setListByDate(res)); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (res) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(_this._data.setData(cityId, res)); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function () { return _this._data.getData(cityId); }));
             }
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(fbdata);
-        }
-        // Error handling...
-        // ,
-        // catchError(e => {
-        //   console.log('ERR switchMap 1', e);
-        //   return of(e);
-        // }
-        // )
-        ));
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(function (e) {
+            console.log('ERR Fetching data', e);
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(e);
+        }));
     };
     OwmDataService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
@@ -574,11 +571,9 @@ var OwmService = /** @class */ (function () {
         this._http = _http;
     }
     OwmService.prototype.getDefaultData = function (cityId) {
-        console.log('owm getDefaultData');
         return this._http.get(_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].defaultOwmData);
     };
     OwmService.prototype.getData = function (cityId) {
-        console.log('owm getData');
         var fullUrl = _constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].default5DayForecastUrl +
             '?id=' +
             cityId +
@@ -670,7 +665,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sdr/projects/owm-a6-fb/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/sdr/tests/owm-a6-fb/src/main.ts */"./src/main.ts");
 
 
 /***/ })
