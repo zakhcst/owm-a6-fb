@@ -164,7 +164,7 @@ module.exports = ".forecast-card {\n  height: 95vh;\n  padding: 5px;\n  backgrou
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card class=\"forecast-card\">\n  <div fxLayout=\"column\" fxFill class=\"content\">\n\n    <div fxLayout=\"column\" fxLayout.gt-sm=\"row\">\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"start center\">\n        <span [fxHide]=\"loading\">\n          {{weatherData?.updated ? 'Updated:' : 'Sample:'}} {{(weatherData?.updated || weatherData?.list[0].dt * 1000)\n          |\n          date: 'EEE dd MMM HH:mm'}}\n          <br>\n          {{'Forecast time slots: ' + weatherData?.cnt}}\n        </span>\n      </span>\n      <h4 fxFlex=\"1 1\" fxLayout=\"column\" fxLayoutAlign=\"center center\">\n        OWM Forecast\n        <mat-spinner *ngIf=\"loading\"></mat-spinner>\n      </h4>\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"end center\">\n        <mat-form-field [fxHide]=\"loading\">\n          <mat-select placeholder=\"City\" [(value)]=\"selectedCityId\" (selectionChange)=\"onChange()\">\n            <mat-option *ngFor=\"let city of cities$ | async\" [value]=\"city.id\">\n              <span fxFlex>\n                {{city.name}}\n              </span>\n              <span fxFlex fxLayoutAlign=\"end center\">\n                {{city.iso2}}\n              </span>\n            </mat-option>\n          </mat-select>\n        </mat-form-field>\n      </span>\n    </div>\n\n    <div fxFlex fxLayout=\"row\" [fxHide]=\"loading\" class=\"scroll-this\">\n\n      <div fxFlex=\"8%\" fxLayout=\"column\" fxFill>\n        <div fxFlex=\"10%\" fxFlex.gt-sm=\"7%\" fxLayout=\"column\" class=\"table-00-background\">\n          <span fxLayoutAlign=\"end center\">Hour</span>\n          <div fxFlex></div>\n          <span fxLayoutAlign=\"start start\">Date</span>\n        </div>\n\n        <div fxFlex fxLayout=\"column\" fxFill>\n          <div fxFlex fxLayoutAlign=\"start center\" class=\"table-date_cell-background\" *ngFor=\"let dataDaily of weatherData?.listByDate | keyvalue; index as $index;\">\n            <span fxLayout=\"column\" fxLayout.gt-md=\"row\">\n              <span>\n                {{dataDaily.key | date: 'EEE'}}&nbsp;\n              </span>\n              <span>\n                {{dataDaily.key | date: 'dd MMM'}}\n              </span>\n            </span>\n          </div>\n        </div>\n      </div>\n\n      <div fxFlex fxLayout=\"column\" class=\"scroll-this\">\n\n        <div fxFlex=\"10%\" fxFlex.gt-sm=\"7%\" fxLayout=\"row\">\n          <span fxFlex fxLayoutAlign=\"center center\" class=\"table-header-background\" *ngFor=\"let hour of hoursTemplate.hours; index as ind\"\n            [ngStyle]=\"{'background-color': hoursTemplate.colors[ind], 'color': (ind < 3 || ind > 6 ? 'white': 'black')}\">\n            {{(hour > 9 ? '' : '0' ) + hour + ':00' }}\n          </span>\n        </div>\n\n        <div fxFlex *ngFor=\"let dataDaily of weatherData?.listByDate | keyvalue; index as $index;\">\n\n          <span fxFlex fxLayout=\"row\" *ngFor=\"let hour of hoursTemplate.hours; index as ind\">\n            <span fxFlex class=\"table-data_cell_empty-background\" *ngIf=\"!dataDaily.value[hour]\"></span>\n            <span fxFlex\n            *ngIf=\"dataDaily.value[hour]\"\n            class=\"table-data_cell-background\"\n            [ngStyle]=\"{'background-color': hoursTemplate.colors[ind], 'color': (ind < 3 || ind > 6 ? 'white': 'black')}\"\n              fxLayout=\"column\" fxLayoutAlign=\"center center\">\n\n              <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n                <img [src]=\"iconsUrl + dataDaily.value[hour].weather[0].icon + '.png'\">\n                {{dataDaily.value[hour].weather[0].main }} {{dataDaily.value[hour].main.temp | number:'1.0-0'}}&#176;C\n              </div>\n\n              <span fxLayout=\"column\">\n                <span fxFlex=\"25%\" fxLayout=\"row\" fxHide.xs fxLayoutAlign=\"start end\" class=\"table-secondary_data_line\">\n                  <img [src]=\"iconPressure\">\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{dataDaily.value[hour].main.pressure | number:'1.0-0'}}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>mm</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span fxFlex=\"25%\" fxLayout=\"row\" fxHide.xs fxLayoutAlign=\"start end\" class=\"table-secondary_data_line\">\n                  <img [src]=\"iconWind\">\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{dataDaily.value[hour].wind.speed | number:'1.0-0'}}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>m/s</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span fxFlex=\"25%\" fxLayout=\"row\" fxHide.xs fxLayoutAlign=\"start end\" class=\"table-secondary_data_line\">\n                  <img [src]=\"iconHumidity\">\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{dataDaily.value[hour].main.humidity | number:'1.0-0'}}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>%</small>&nbsp;\n                    </span>\n                  </span>\n                </span>\n              </span>\n            </span>\n          </span>\n        </div>\n\n      </div>\n    </div>\n  </div>\n</mat-card>\n"
+module.exports = "<mat-card class=\"forecast-card\">\n  <div fxLayout=\"column\" fxFill class=\"content\">\n\n    <div fxLayout=\"column\" fxLayout.gt-sm=\"row\">\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"start center\">\n        <span [fxHide]=\"loading\">\n          {{weatherData?.updated ? 'Updated:' : 'Sample:'}} {{(weatherData?.updated || weatherData?.list[0].dt * 1000)\n          |\n          date: 'EEE dd MMM HH:mm'}}\n          <br>\n          {{'Forecast time slots: ' + weatherData?.cnt}}\n        </span>\n      </span>\n      <h4 fxFlex=\"1 1\" fxLayout=\"column\" fxLayoutAlign=\"center center\">\n        OWM Forecast\n        <mat-spinner *ngIf=\"loading\"></mat-spinner>\n      </h4>\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"end center\">\n        <mat-form-field [fxHide]=\"loading\">\n          <mat-select placeholder=\"City\" [(value)]=\"selectedCityId\" (selectionChange)=\"onChange()\">\n            <mat-option *ngFor=\"let city of cities$ | async\" [value]=\"city.id\">\n              <span fxFlex>\n                {{city.name}}\n              </span>\n              <span fxFlex fxLayoutAlign=\"end center\">\n                {{city.iso2}}\n              </span>\n            </mat-option>\n          </mat-select>\n        </mat-form-field>\n      </span>\n    </div>\n\n    <div fxFlex fxLayout=\"row\" [fxHide]=\"loading\" class=\"scroll-this\">\n\n      <div fxFlex=\"8%\" fxLayout=\"column\" fxFill>\n        <div fxFlex=\"10%\" fxFlex.gt-sm=\"7%\" fxLayout=\"column\" class=\"table-00-background\">\n          <span fxLayoutAlign=\"end center\">Hour</span>\n          <div fxFlex></div>\n          <span fxLayoutAlign=\"start start\">Date</span>\n        </div>\n\n        <div fxFlex fxLayout=\"column\" fxFill>\n          <div fxFlex fxLayoutAlign=\"start center\" class=\"table-date_cell-background\" *ngFor=\"let dataDaily of weatherData?.listByDate | keyvalue; index as $index;\">\n            <span fxLayout=\"column\" fxLayout.gt-md=\"row\">\n              <span>\n                {{dataDaily.key | date: 'EEE'}}&nbsp;\n              </span>\n              <span>\n                {{dataDaily.key | date: 'dd MMM'}}\n              </span>\n            </span>\n          </div>\n        </div>\n      </div>\n\n      <div fxFlex fxLayout=\"column\" class=\"scroll-this\">\n\n        <div fxFlex=\"10%\" fxFlex.gt-sm=\"7%\" fxLayout=\"row\">\n          <span fxFlex fxLayoutAlign=\"center center\" class=\"table-header-background\" *ngFor=\"let timeSlot of timeTemplate; index as ind\"\n            [ngStyle]=\"{'background-color': timeTemplate[ind].bgColor, 'color': timeTemplate[ind].textColor}\">\n            {{(timeSlot.hour > 9 ? '' : '0' ) + timeSlot.hour + ':00' }}\n          </span>\n        </div>\n\n        <div fxFlex *ngFor=\"let dataDaily of weatherData?.listByDate | keyvalue; index as $index;\">\n\n          <span fxFlex fxLayout=\"row\" *ngFor=\"let timeSlot of timeTemplate; index as ind\">\n            <span fxFlex class=\"table-data_cell_empty-background\" *ngIf=\"!dataDaily.value[timeSlot.hour]\"></span>\n            <span fxFlex\n                *ngIf=\"dataDaily.value[timeSlot.hour]\"\n                class=\"table-data_cell-background\"\n                [ngStyle]=\"{'background-color': timeTemplate[ind].bgColor, 'color': timeTemplate[ind].textColor}\"\n                fxLayout=\"column\"\n                fxLayoutAlign=\"center center\">\n\n              <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n                <img [src]=\"iconsUrl + dataDaily.value[timeSlot.hour].weather[0].icon + '.png'\">\n                {{dataDaily.value[timeSlot.hour].weather[0].main }} {{dataDaily.value[timeSlot.hour].main.temp | number:'1.0-0'}}&#176;C\n              </div>\n\n              <span fxLayout=\"column\">\n                <span fxFlex=\"25%\" fxLayout=\"row\" fxHide.xs fxLayoutAlign=\"start end\" class=\"table-secondary_data_line\">\n                  <img [src]=\"iconPressure\">\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{dataDaily.value[timeSlot.hour].main.pressure | number:'1.0-0'}}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>mm</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span fxFlex=\"25%\" fxLayout=\"row\" fxHide.xs fxLayoutAlign=\"start end\" class=\"table-secondary_data_line\">\n                  <img [src]=\"iconWind\">\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{dataDaily.value[timeSlot.hour].wind.speed | number:'1.0-0'}}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>m/s</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span fxFlex=\"25%\" fxLayout=\"row\" fxHide.xs fxLayoutAlign=\"start end\" class=\"table-secondary_data_line\">\n                  <img [src]=\"iconHumidity\">\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{dataDaily.value[timeSlot.hour].main.humidity | number:'1.0-0'}}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>%</small>&nbsp;\n                    </span>\n                  </span>\n                </span>\n              </span>\n            </span>\n          </span>\n        </div>\n\n      </div>\n    </div>\n  </div>\n</mat-card>\n"
 
 /***/ }),
 
@@ -199,25 +199,24 @@ var ForecastComponent = /** @class */ (function () {
     function ForecastComponent(_cities, _data) {
         this._cities = _cities;
         this._data = _data;
-        this.cities$ = _cities.getData();
         this.selectedCityId = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].defaultCityId;
-        this.hoursTemplate = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].hoursTemplate;
+        this.timeTemplate = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].timeTemplate;
         this.iconsUrl = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].owmIconsUrl;
         this.iconWind = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].windIconsUrl;
-        this.iconPressure = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].pressureIconsUrl;
         this.iconHumidity = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].humidityIconsUrl;
-        this.data = _data;
+        this.iconPressure = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].pressureIconsUrl;
+        this.cities$ = _cities.getData();
         this.onChange();
     }
     ForecastComponent.prototype.ngOnInit = function () { };
     ForecastComponent.prototype.onChange = function () {
         var _this = this;
         this.loading = true;
-        this.weatherDataSubscription = this._data
+        this.weatherDataSubscription$ = this._data
             .getData(this.selectedCityId)
             .subscribe(function (data) {
             _this.weatherData = data;
-            _this.weatherDataSubscription.unsubscribe();
+            _this.weatherDataSubscription$.unsubscribe();
             _this.loading = false;
         });
     };
@@ -379,19 +378,16 @@ var ConstantsService = /** @class */ (function () {
     ConstantsService.windIconsUrl = 'assets/icons8-windsock-16.png';
     ConstantsService.pressureIconsUrl = 'assets/icons8-atmospheric-pressure-16.png';
     ConstantsService.humidityIconsUrl = 'assets/icons8-hygrometer-16.png';
-    ConstantsService.hoursTemplate = {
-        hours: [0, 3, 6, 9, 12, 15, 18, 21],
-        colors: [
-            '#4060bb',
-            '#4060bb',
-            '#5080dd',
-            '#70b0ff',
-            '#90c0ff',
-            '#90c0ff',
-            '#70b0ff',
-            '#5080dd',
-        ]
-    };
+    ConstantsService.timeTemplate = [
+        { hour: 0, bgColor: '#4060bb', textColor: 'white' },
+        { hour: 3, bgColor: '#4060bb', textColor: 'white' },
+        { hour: 6, bgColor: '#5080dd', textColor: 'white' },
+        { hour: 9, bgColor: '#70b0ff', textColor: 'black' },
+        { hour: 12, bgColor: '#90c0ff', textColor: 'black' },
+        { hour: 15, bgColor: '#90c0ff', textColor: 'black' },
+        { hour: 18, bgColor: '#70b0ff', textColor: 'black' },
+        { hour: 21, bgColor: '#5080dd', textColor: 'white' }
+    ];
     ConstantsService.defaultOwmData = 'assets/owm-data-sample.json';
     ConstantsService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
@@ -665,7 +661,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sdr/tests/owm-a6-fb/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/sdr/projects/owm-a6-fb/src/main.ts */"./src/main.ts");
 
 
 /***/ })
