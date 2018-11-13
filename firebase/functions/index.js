@@ -1,11 +1,9 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
 
-const fetch = require('node-fetch');
+const test = require('./helloWorld');
+const owm = require('./owm');
+const cities = require('./cities');
 
-
-let db = admin.database()
-
-exports.helloWorld = functions.https.onRequest(async (request, response) => {
-  response.send('Hello from Firebase!!!!');
-});
+exports.test = test.helloWorld;
+exports.owmOnWrite = owm.onWrite;
+exports.citiesOnWriteUpdate = cities.onWriteUpdate;
+exports.citiesOnWriteRead   = cities.onWriteRead;

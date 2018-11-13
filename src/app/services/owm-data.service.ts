@@ -1,14 +1,21 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { of, from } from 'rxjs';
+import { switchMap, catchError, tap } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
+import { CitiesService } from './cities.service';
+import { OwmFallbackDataService } from './owm-fallback-data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OwmDataService {
-  constructor(private _owm: OwmService, private _data: DataService) {}
+  constructor(
+    private _owm: OwmService,
+    private _data: DataService,
+    private _cities: CitiesService,
+    private  _owmFallback: OwmFallbackDataService
+  ) {}
 
   setListByDate(data) {
     data = data || { list: [] };
@@ -25,11 +32,12 @@ export class OwmDataService {
       }
       return accumulator;
     }, {});
+    // 'data.list' is kept for testing only, otherwise is not needed anymore
     data.updated = new Date().valueOf();
     return data;
   }
 
-  public isExpired(data): boolean {
+  isExpired(data): boolean {
     // expired data is when [0] is older than 3 hours
     const now = new Date().valueOf();
     const firstSample = data.list[0].dt * 1000;
@@ -38,22 +46,24 @@ export class OwmDataService {
   }
 
   // Caching the data for 3h
-  // in order to prevent exceeding OWM servers dev quote.
+  // in order to prevent exceeding OWM requsts dev quote.
   getData(cityId) {
-    return this._data.getData(cityId).pipe(
+    return this._cities.updateReads(cityId)
+    .pipe(
+      switchMap(() => from(this._data.getData(cityId))),
       switchMap((fbdata: any) => {
         if (fbdata === null || this.isExpired(fbdata)) {
           return this._owm.getData(cityId).pipe(
             switchMap(res => of(this.setListByDate(res))),
-            switchMap(res => of(this._data.setData(cityId, res))),
+            switchMap(res => from(this._data.setData(cityId, res))),
             switchMap(() => this._data.getData(cityId))
           );
         }
         return of(fbdata);
       }),
-      catchError(e => {
-        console.log('ERR Fetching data', e);
-        return of(e);
+      catchError(err => {
+        console.log('ERROR: OwmDataService:', err);
+        return this._owmFallback.getData();
       })
     );
   }

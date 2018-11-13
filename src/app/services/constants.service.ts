@@ -12,6 +12,7 @@ export class ConstantsService {
   public static readonly defaultUnits = 'metric';
   public static readonly defaultCityId = '2643743'; // London, UK
   public static readonly defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
+  public static readonly owmFallbackData = 'assets/owm-fallback-data.json';
 
   public static readonly owmIconsUrl = 'http://openweathermap.org/img/w/';
   public static readonly windIconsUrl = 'assets/icons8-windsock-16.png';
