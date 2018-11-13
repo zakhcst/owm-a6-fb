@@ -99,9 +99,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
 /* harmony import */ var _modules_angular_material_angular_material_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/angular-material/angular-material.module */ "./src/app/modules/angular-material/angular-material.module.ts");
 /* harmony import */ var _modules_layouts_layouts_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/layouts/layouts.module */ "./src/app/modules/layouts/layouts.module.ts");
-/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
 /* harmony import */ var _components_forecast_forecast_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/forecast/forecast.component */ "./src/app/components/forecast/forecast.component.ts");
+/* harmony import */ var _pipes_sort_cities_pipe__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pipes/sort-cities.pipe */ "./src/app/pipes/sort-cities.pipe.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -119,23 +120,24 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_9__["AppComponent"], _components_forecast_forecast_component__WEBPACK_IMPORTED_MODULE_10__["ForecastComponent"]],
+            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_9__["AppComponent"], _components_forecast_forecast_component__WEBPACK_IMPORTED_MODULE_10__["ForecastComponent"], _pipes_sort_cities_pipe__WEBPACK_IMPORTED_MODULE_11__["SortCitiesPipe"]],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClientModule"],
-                _angular_fire__WEBPACK_IMPORTED_MODULE_3__["AngularFireModule"].initializeApp(src_environments_environment__WEBPACK_IMPORTED_MODULE_8__["environment"].firebase),
+                _angular_fire__WEBPACK_IMPORTED_MODULE_3__["AngularFireModule"].initializeApp(_environments_environment__WEBPACK_IMPORTED_MODULE_8__["environment"].firebase),
                 _angular_fire_database__WEBPACK_IMPORTED_MODULE_4__["AngularFireDatabaseModule"],
                 _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_5__["BrowserAnimationsModule"],
                 _modules_angular_material_angular_material_module__WEBPACK_IMPORTED_MODULE_6__["AngularMaterialModule"],
                 _modules_layouts_layouts_module__WEBPACK_IMPORTED_MODULE_7__["LayoutsModules"]
             ],
             exports: [],
-            providers: [],
+            providers: [_pipes_sort_cities_pipe__WEBPACK_IMPORTED_MODULE_11__["SortCitiesPipe"]],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_9__["AppComponent"]]
         })
     ], AppModule);
@@ -164,7 +166,7 @@ module.exports = ".forecast-card {\n  height: 95vh;\n  padding: 5px;\n  backgrou
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card class=\"forecast-card\">\n  <div fxLayout=\"column\" fxFill class=\"content\">\n\n    <div fxLayout=\"column\" fxLayout.gt-sm=\"row\">\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"start center\">\n        <span [fxHide]=\"loading\">\n          {{weatherData?.updated ? 'Updated:' : 'Sample:'}} {{(weatherData?.updated || weatherData?.list[0].dt * 1000)\n          |\n          date: 'EEE dd MMM HH:mm'}}\n          <br>\n          {{'Forecast time slots: ' + weatherData?.cnt}}\n        </span>\n      </span>\n      <h4 fxFlex=\"1 1\" fxLayout=\"column\" fxLayoutAlign=\"center center\">\n        OWM Forecast\n        <mat-spinner *ngIf=\"loading\"></mat-spinner>\n      </h4>\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"end center\">\n        <mat-form-field [fxHide]=\"loading\">\n          <mat-select placeholder=\"City\" [(value)]=\"selectedCityId\" (selectionChange)=\"onChange()\">\n            <mat-option *ngFor=\"let city of cities$ | async\" [value]=\"city.id\">\n              <span fxFlex>\n                {{city.name}}\n              </span>\n              <span fxFlex fxLayoutAlign=\"end center\">\n                {{city.iso2}}\n              </span>\n            </mat-option>\n          </mat-select>\n        </mat-form-field>\n      </span>\n    </div>\n\n    <div fxFlex fxLayout=\"row\" [fxHide]=\"loading\" class=\"scroll-this\">\n\n      <div fxFlex=\"8%\" fxLayout=\"column\" fxFill>\n        <div fxFlex=\"10%\" fxFlex.gt-sm=\"7%\" fxLayout=\"column\" class=\"table-00-background\">\n          <span fxLayoutAlign=\"end center\">Hour</span>\n          <div fxFlex></div>\n          <span fxLayoutAlign=\"start start\">Date</span>\n        </div>\n\n        <div fxFlex fxLayout=\"column\" fxFill>\n          <div fxFlex fxLayoutAlign=\"start center\" class=\"table-date_cell-background\" *ngFor=\"let dataDaily of weatherData?.listByDate | keyvalue; index as $index;\">\n            <span fxLayout=\"column\" fxLayout.gt-md=\"row\">\n              <span>\n                {{dataDaily.key | date: 'EEE'}}&nbsp;\n              </span>\n              <span>\n                {{dataDaily.key | date: 'dd MMM'}}\n              </span>\n            </span>\n          </div>\n        </div>\n      </div>\n\n      <div fxFlex fxLayout=\"column\" class=\"scroll-this\">\n\n        <div fxFlex=\"10%\" fxFlex.gt-sm=\"7%\" fxLayout=\"row\">\n          <span fxFlex fxLayoutAlign=\"center center\" class=\"table-header-background\" *ngFor=\"let timeSlot of timeTemplate; index as ind\"\n            [ngStyle]=\"{'background-color': timeTemplate[ind].bgColor, 'color': timeTemplate[ind].textColor}\">\n            {{(timeSlot.hour > 9 ? '' : '0' ) + timeSlot.hour + ':00' }}\n          </span>\n        </div>\n\n        <div fxFlex *ngFor=\"let dataDaily of weatherData?.listByDate | keyvalue; index as $index;\">\n\n          <span fxFlex fxLayout=\"row\" *ngFor=\"let timeSlot of timeTemplate; index as ind\">\n            <span fxFlex class=\"table-data_cell_empty-background\" *ngIf=\"!dataDaily.value[timeSlot.hour]\"></span>\n            <span fxFlex\n                *ngIf=\"dataDaily.value[timeSlot.hour]\"\n                class=\"table-data_cell-background\"\n                [ngStyle]=\"{'background-color': timeTemplate[ind].bgColor, 'color': timeTemplate[ind].textColor}\"\n                fxLayout=\"column\"\n                fxLayoutAlign=\"center center\">\n\n              <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n                <img [src]=\"iconsUrl + dataDaily.value[timeSlot.hour].weather[0].icon + '.png'\">\n                {{dataDaily.value[timeSlot.hour].weather[0].main }} {{dataDaily.value[timeSlot.hour].main.temp | number:'1.0-0'}}&#176;C\n              </div>\n\n              <span fxLayout=\"column\">\n                <span fxFlex=\"25%\" fxLayout=\"row\" fxHide.xs fxLayoutAlign=\"start end\" class=\"table-secondary_data_line\">\n                  <img [src]=\"iconPressure\">\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{dataDaily.value[timeSlot.hour].main.pressure | number:'1.0-0'}}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>mm</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span fxFlex=\"25%\" fxLayout=\"row\" fxHide.xs fxLayoutAlign=\"start end\" class=\"table-secondary_data_line\">\n                  <img [src]=\"iconWind\">\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{dataDaily.value[timeSlot.hour].wind.speed | number:'1.0-0'}}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>m/s</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span fxFlex=\"25%\" fxLayout=\"row\" fxHide.xs fxLayoutAlign=\"start end\" class=\"table-secondary_data_line\">\n                  <img [src]=\"iconHumidity\">\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{dataDaily.value[timeSlot.hour].main.humidity | number:'1.0-0'}}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>%</small>&nbsp;\n                    </span>\n                  </span>\n                </span>\n              </span>\n            </span>\n          </span>\n        </div>\n\n      </div>\n    </div>\n  </div>\n</mat-card>\n"
+module.exports = "<mat-card class=\"forecast-card\">\n  <div fxLayout=\"column\" fxFill class=\"content\">\n\n    <div fxLayout=\"column\" fxLayout.gt-sm=\"row\">\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"start center\" *ngIf=\"!loadingCities && !loading\">\n        <span [fxHide]=\"loading\">\n          {{ weatherData?.updated ? 'Updated:' : 'Sample:' }}\n          {{ weatherData?.updated || (weatherData?.list)[0].dt * 1000 | date: 'EEE dd MMM HH:mm' }}\n          <br/>\n          {{ 'Forecast time slots: ' + weatherData?.cnt }}\n        </span>\n      </span>\n      <span fxFlex=\"1 1\" fxLayout=\"column\" fxLayoutAlign=\"center center\">\n        <h4>OWM Forecast</h4>\n      </span>\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"center end\" [fxHide]=\"loadingCities || loading\">\n        <span fxFlex></span>\n        <mat-form-field>\n          <mat-select placeholder=\"City\" [(value)]=\"selectedCityId\" (selectionChange)=\"onChange()\">\n            <mat-option *ngFor=\"let city of (cities$ | async | keyvalue | sortCities)\" [value]=\"city.key\" >\n              <span fxFlex> {{ city.value.name }} </span>\n              <span fxFlex fxLayoutAlign=\"end center\">\n                {{ city.value.iso2 }}\n              </span>\n            </mat-option>\n          </mat-select>\n        </mat-form-field>\n      </span>\n    </div>\n\n    <div\n      fxFlex\n      fxLayout=\"row\"\n      [fxHide]=\"loading || loadingCities\"\n      class=\"scroll-this\"\n    >\n      <div fxFlex=\"8%\" fxLayout=\"column\" fxFill>\n        <div\n          fxFlex=\"10%\"\n          fxFlex.gt-sm=\"7%\"\n          fxLayout=\"column\"\n          class=\"table-00-background\"\n        >\n          <span fxLayoutAlign=\"end center\">Hour</span>\n          <div fxFlex></div>\n          <span fxLayoutAlign=\"start start\">Date</span>\n        </div>\n\n        <div fxFlex fxLayout=\"column\" fxFill>\n          <div\n            fxFlex\n            fxLayoutAlign=\"start center\"\n            class=\"table-date_cell-background\"\n            *ngFor=\"\n              let dataDaily of (weatherData?.listByDate | keyvalue);\n              index as $index\n            \"\n          >\n            <span fxLayout=\"column\" fxLayout.gt-md=\"row\">\n              <span> {{ dataDaily.key | date: 'EEE' }}&nbsp; </span>\n              <span> {{ dataDaily.key | date: 'dd MMM' }} </span>\n            </span>\n          </div>\n        </div>\n      </div>\n\n      <div fxFlex fxLayout=\"column\" class=\"scroll-this\">\n        <div fxFlex=\"10%\" fxFlex.gt-sm=\"7%\" fxLayout=\"row\">\n          <span\n            fxFlex\n            fxLayoutAlign=\"center center\"\n            class=\"table-header-background\"\n            *ngFor=\"let timeSlot of timeTemplate; index as ind\"\n            [ngStyle]=\"{\n              'background-color': timeTemplate[ind].bgColor,\n              color: timeTemplate[ind].textColor\n            }\"\n          >\n            {{ (timeSlot.hour > 9 ? '' : '0') + timeSlot.hour + ':00' }}\n          </span>\n        </div>\n\n        <div\n          fxFlex\n          *ngFor=\"\n            let dataDaily of (weatherData?.listByDate | keyvalue);\n            index as $index\n          \"\n        >\n          <span\n            fxFlex\n            fxLayout=\"row\"\n            *ngFor=\"let timeSlot of timeTemplate; index as ind\"\n          >\n            <span\n              fxFlex\n              class=\"table-data_cell_empty-background\"\n              *ngIf=\"!dataDaily.value[timeSlot.hour]\"\n            ></span>\n            <span\n              fxFlex\n              *ngIf=\"dataDaily.value[timeSlot.hour]\"\n              class=\"table-data_cell-background\"\n              [ngStyle]=\"{\n                'background-color': timeTemplate[ind].bgColor,\n                color: timeTemplate[ind].textColor\n              }\"\n              fxLayout=\"column\"\n              fxLayoutAlign=\"center center\"\n            >\n              <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n                <img\n                  [src]=\"\n                    iconsUrl +\n                    dataDaily.value[timeSlot.hour].weather[0].icon +\n                    '.png'\n                  \"\n                />\n                {{ dataDaily.value[timeSlot.hour].weather[0].main }}\n                {{\n                  dataDaily.value[timeSlot.hour].main.temp | number: '1.0-0'\n                }}&#176;C\n              </div>\n\n              <span fxLayout=\"column\">\n                <span\n                  fxFlex=\"25%\"\n                  fxLayout=\"row\"\n                  fxLayoutAlign=\"start end\"\n                  class=\"table-secondary_data_line\"\n                >\n                  <img [src]=\"iconPressure\" />\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{\n                        dataDaily.value[timeSlot.hour].main.pressure\n                          | number: '1.0-0'\n                      }}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>mm</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span\n                  fxFlex=\"25%\"\n                  fxLayout=\"row\"\n                  fxLayoutAlign=\"start end\"\n                  class=\"table-secondary_data_line\"\n                >\n                  <img [src]=\"iconWind\" />\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{\n                        dataDaily.value[timeSlot.hour].wind.speed\n                          | number: '1.0-0'\n                      }}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>m/s</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span\n                  fxFlex=\"25%\"\n                  fxLayout=\"row\"\n                  fxLayoutAlign=\"start end\"\n                  class=\"table-secondary_data_line\"\n                >\n                  <img [src]=\"iconHumidity\" />\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{\n                        dataDaily.value[timeSlot.hour].main.humidity\n                          | number: '1.0-0'\n                      }}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>%</small>&nbsp;\n                    </span>\n                  </span>\n                </span>\n              </span>\n            </span>\n          </span>\n        </div>\n      </div>\n    </div>\n    <div fxLayout=\"row\">\n      <span fxFlex fxLayoutAlign=\"start center\">\n        <span *ngIf=\"!loadingStats\">\n          OWM\n          Requests:{{ stats.r || 0 }}\n          Updates:{{ stats.u || 0 }}\n        </span>\n      </span>\n      <span fxFlex></span>\n      <span *ngIf=\"!loadingCities && !loading\">\n        <span fxFlex>\n          {{ cities[selectedCityId].name + ' ' }}\n          Requests:{{ cities[selectedCityId].r || 0 }}\n          Updates:{{ cities[selectedCityId].u || 0 }}\n        </span>\n      </span>\n    </div>\n    <div fxFlex fxLayout=\"column\" fxLayoutAlign=\"center center\" *ngIf=\"loading\">\n      <mat-spinner></mat-spinner>\n    </div>\n  </div>\n</mat-card>\n"
 
 /***/ }),
 
@@ -182,6 +184,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_owm_data_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/owm-data.service */ "./src/app/services/owm-data.service.ts");
 /* harmony import */ var _services_constants_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/constants.service */ "./src/app/services/constants.service.ts");
 /* harmony import */ var _services_cities_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/cities.service */ "./src/app/services/cities.service.ts");
+/* harmony import */ var _services_owm_stats_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/owm-stats.service */ "./src/app/services/owm-stats.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -195,17 +199,30 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
 var ForecastComponent = /** @class */ (function () {
-    function ForecastComponent(_cities, _data) {
+    function ForecastComponent(_cities, _data, _owmStats) {
+        var _this = this;
         this._cities = _cities;
         this._data = _data;
+        this._owmStats = _owmStats;
         this.selectedCityId = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].defaultCityId;
         this.timeTemplate = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].timeTemplate;
         this.iconsUrl = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].owmIconsUrl;
         this.iconWind = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].windIconsUrl;
         this.iconHumidity = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].humidityIconsUrl;
         this.iconPressure = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].pressureIconsUrl;
-        this.cities$ = _cities.getData();
+        this.loadingCities = true;
+        this.cities$ = this._cities.getData().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function (cities) {
+            _this.cities = cities;
+            _this.loadingCities = false;
+        }));
+        this.loadingStats = true;
+        this._owmStats.getData().subscribe(function (stats) {
+            _this.stats = stats;
+            _this.loadingStats = false;
+        });
         this.onChange();
     }
     ForecastComponent.prototype.ngOnInit = function () { };
@@ -218,7 +235,7 @@ var ForecastComponent = /** @class */ (function () {
             _this.weatherData = data;
             _this.weatherDataSubscription$.unsubscribe();
             _this.loading = false;
-        });
+        }, function (err) { return console.log('ForecastComponent data Error:', err); });
     };
     ForecastComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -226,7 +243,7 @@ var ForecastComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./forecast.component.html */ "./src/app/components/forecast/forecast.component.html"),
             styles: [__webpack_require__(/*! ./forecast.component.css */ "./src/app/components/forecast/forecast.component.css")]
         }),
-        __metadata("design:paramtypes", [_services_cities_service__WEBPACK_IMPORTED_MODULE_3__["CitiesService"], _services_owm_data_service__WEBPACK_IMPORTED_MODULE_1__["OwmDataService"]])
+        __metadata("design:paramtypes", [_services_cities_service__WEBPACK_IMPORTED_MODULE_3__["CitiesService"], _services_owm_data_service__WEBPACK_IMPORTED_MODULE_1__["OwmDataService"], _services_owm_stats_service__WEBPACK_IMPORTED_MODULE_4__["OwmStatsService"]])
     ], ForecastComponent);
     return ForecastComponent;
 }());
@@ -295,6 +312,42 @@ var LayoutsModules = [_angular_flex_layout__WEBPACK_IMPORTED_MODULE_0__["FlexLay
 
 /***/ }),
 
+/***/ "./src/app/pipes/sort-cities.pipe.ts":
+/*!*******************************************!*\
+  !*** ./src/app/pipes/sort-cities.pipe.ts ***!
+  \*******************************************/
+/*! exports provided: SortCitiesPipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SortCitiesPipe", function() { return SortCitiesPipe; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var SortCitiesPipe = /** @class */ (function () {
+    function SortCitiesPipe() {
+    }
+    SortCitiesPipe.prototype.transform = function (cities) {
+        return cities ? cities.sort(function (a, b) { return (a.value.name < b.value.name ? -1 : 1); }) : [];
+    };
+    SortCitiesPipe = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({
+            name: 'sortCities'
+        })
+    ], SortCitiesPipe);
+    return SortCitiesPipe;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/services/cities.service.ts":
 /*!********************************************!*\
   !*** ./src/app/services/cities.service.ts ***!
@@ -307,7 +360,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CitiesService", function() { return CitiesService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_fire_database__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/fire/database */ "./node_modules/@angular/fire/database/index.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -320,18 +374,19 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var CitiesService = /** @class */ (function () {
     function CitiesService(_db) {
         this._db = _db;
     }
     CitiesService.prototype.getData = function () {
-        return this._db
-            .list('/eu-capitals')
-            .valueChanges()
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (arr) {
-            return arr.sort(function (a, b) { return (a.name < b.name ? -1 : 1); });
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["from"])(this._db.object('/cities').valueChanges()).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["share"])());
+    };
+    CitiesService.prototype.updateReads = function (cityId) {
+        var ref = this._db.object("/cities/" + cityId);
+        return ref.valueChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["take"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (city) {
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["from"])(ref.update({ 'r': ((city.r || 0) + 1) }));
         }));
-        // error handling
     };
     CitiesService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
@@ -370,10 +425,12 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var ConstantsService = /** @class */ (function () {
     function ConstantsService() {
     }
+    ConstantsService.owmData = 'owm';
     ConstantsService.default5DayForecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
     ConstantsService.defaultUnits = 'metric';
-    ConstantsService.defaultCityId = 2643743; // London, UK
+    ConstantsService.defaultCityId = '2643743'; // London, UK
     ConstantsService.defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
+    ConstantsService.owmFallbackData = 'assets/owm-fallback-data.json';
     ConstantsService.owmIconsUrl = 'http://openweathermap.org/img/w/';
     ConstantsService.windIconsUrl = 'assets/icons8-windsock-16.png';
     ConstantsService.pressureIconsUrl = 'assets/icons8-atmospheric-pressure-16.png';
@@ -414,6 +471,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataService", function() { return DataService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_fire_database__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/fire/database */ "./node_modules/@angular/fire/database/index.js");
+/* harmony import */ var _constants_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constants.service */ "./src/app/services/constants.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -425,15 +483,16 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var DataService = /** @class */ (function () {
     function DataService(_db) {
         this._db = _db;
     }
     DataService.prototype.getData = function (cityId) {
-        return this._db.object(cityId).valueChanges();
+        return this._db.object(_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].owmData + '/' + cityId).valueChanges();
     };
     DataService.prototype.setData = function (cityId, data) {
-        var ref = this._db.object(cityId);
+        var ref = this._db.object(_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].owmData + '/' + cityId);
         return ref.set(data);
     };
     DataService = __decorate([
@@ -464,6 +523,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _owm_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./owm.service */ "./src/app/services/owm.service.ts");
 /* harmony import */ var _data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./data.service */ "./src/app/services/data.service.ts");
+/* harmony import */ var _cities_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cities.service */ "./src/app/services/cities.service.ts");
+/* harmony import */ var _owm_fallback_data_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./owm-fallback-data.service */ "./src/app/services/owm-fallback-data.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -478,10 +539,14 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
 var OwmDataService = /** @class */ (function () {
-    function OwmDataService(_owm, _data) {
+    function OwmDataService(_owm, _data, _cities, _owmFallback) {
         this._owm = _owm;
         this._data = _data;
+        this._cities = _cities;
+        this._owmFallback = _owmFallback;
     }
     OwmDataService.prototype.setListByDate = function (data) {
         data = data || { list: [] };
@@ -498,6 +563,7 @@ var OwmDataService = /** @class */ (function () {
             }
             return accumulator;
         }, {});
+        // 'data.list' is kept for testing only, otherwise is not needed anymore
         data.updated = new Date().valueOf();
         return data;
     };
@@ -508,29 +574,119 @@ var OwmDataService = /** @class */ (function () {
         var diff = now - (data.updated || firstSample);
         return diff > 3 * 3600 * 1000; // 3 hours
     };
-    // The additional logic is introduced
-    // to cache the data for 3 hours and then on request to get new data.
-    // All in order to prevent hitting OWM servers
-    // exessively and above the dev quote.
+    // Caching the data for 3h
+    // in order to prevent exceeding OWM requsts dev quote.
     OwmDataService.prototype.getData = function (cityId) {
         var _this = this;
-        return this._data.getData(cityId).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (fbdata) {
+        return this._cities.updateReads(cityId)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function () { return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["from"])(_this._data.getData(cityId)); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (fbdata) {
             if (fbdata === null || _this.isExpired(fbdata)) {
-                return _this._owm.getData(cityId).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (res) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(_this.setListByDate(res)); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (res) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(_this._data.setData(cityId, res)); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function () { return _this._data.getData(cityId); }));
+                return _this._owm.getData(cityId).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (res) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(_this.setListByDate(res)); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (res) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["from"])(_this._data.setData(cityId, res)); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function () { return _this._data.getData(cityId); }));
             }
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(fbdata);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(function (e) {
-            console.log('ERR Fetching data', e);
-            return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(e);
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(function (err) {
+            console.log('ERROR: OwmDataService:', err);
+            return _this._owmFallback.getData();
         }));
     };
     OwmDataService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
             providedIn: 'root'
         }),
-        __metadata("design:paramtypes", [_owm_service__WEBPACK_IMPORTED_MODULE_3__["OwmService"], _data_service__WEBPACK_IMPORTED_MODULE_4__["DataService"]])
+        __metadata("design:paramtypes", [_owm_service__WEBPACK_IMPORTED_MODULE_3__["OwmService"],
+            _data_service__WEBPACK_IMPORTED_MODULE_4__["DataService"],
+            _cities_service__WEBPACK_IMPORTED_MODULE_5__["CitiesService"],
+            _owm_fallback_data_service__WEBPACK_IMPORTED_MODULE_6__["OwmFallbackDataService"]])
     ], OwmDataService);
     return OwmDataService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/owm-fallback-data.service.ts":
+/*!*******************************************************!*\
+  !*** ./src/app/services/owm-fallback-data.service.ts ***!
+  \*******************************************************/
+/*! exports provided: OwmFallbackDataService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OwmFallbackDataService", function() { return OwmFallbackDataService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _constants_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constants.service */ "./src/app/services/constants.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var OwmFallbackDataService = /** @class */ (function () {
+    function OwmFallbackDataService(_http) {
+        this._http = _http;
+    }
+    OwmFallbackDataService.prototype.getData = function () {
+        return this._http.get(_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].owmFallbackData);
+    };
+    OwmFallbackDataService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
+    ], OwmFallbackDataService);
+    return OwmFallbackDataService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/owm-stats.service.ts":
+/*!***********************************************!*\
+  !*** ./src/app/services/owm-stats.service.ts ***!
+  \***********************************************/
+/*! exports provided: OwmStatsService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OwmStatsService", function() { return OwmStatsService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_fire_database__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/fire/database */ "./node_modules/@angular/fire/database/index.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var OwmStatsService = /** @class */ (function () {
+    function OwmStatsService(_db) {
+        this._db = _db;
+    }
+    OwmStatsService.prototype.getData = function () {
+        return this._db.object('/stats').valueChanges();
+    };
+    OwmStatsService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [_angular_fire_database__WEBPACK_IMPORTED_MODULE_1__["AngularFireDatabase"]])
+    ], OwmStatsService);
+    return OwmStatsService;
 }());
 
 

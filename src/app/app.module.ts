@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './modules/angular-material/angular-material.module';
 import { LayoutsModules } from './modules/layouts/layouts.module';
 
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { ForecastComponent } from './components/forecast/forecast.component';
 import { SortCitiesPipe } from './pipes/sort-cities.pipe';

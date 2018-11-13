@@ -1,4 +1,9 @@
 [{
+  "name": "Plovdiv",
+  "iso2": "BG",
+  "country": "Bulgaria",
+  "id": 728193
+}, {
   "name": "Vienna",
   "iso2": "AT",
   "country": "Austria",

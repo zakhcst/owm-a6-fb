@@ -3,8 +3,10 @@ import { OwmDataService } from '../../services/owm-data.service';
 import { Observable, Subscription } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { CitiesService } from '../../services/cities.service';
+import { OwmStatsService } from '../../services/owm-stats.service';
 import { TimeTemplate } from '../../models/hours.model';
-import { City } from '../../models/city.model';
+import { OwmStats } from '../../models/owm-stats.model';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forecast',
@@ -19,12 +21,25 @@ export class ForecastComponent implements OnInit {
   iconHumidity: string = ConstantsService.humidityIconsUrl;
   iconPressure: string = ConstantsService.pressureIconsUrl;
   loading: boolean;
+  loadingCities: boolean;
+  loadingStats: boolean;
   weatherDataSubscription$: Subscription;
   cities$: Observable<{}>;
+  cities: {};
+  stats: OwmStats;
   weatherData: any;
 
-  constructor(private _cities: CitiesService, private _data: OwmDataService) {
-    this.cities$ = this._cities.getData();
+  constructor(private _cities: CitiesService, private _data: OwmDataService, private _owmStats: OwmStatsService) {
+    this.loadingCities = true;
+    this.cities$ = this._cities.getData().pipe(tap(cities => {
+      this.cities = cities;
+      this.loadingCities = false;
+    }));
+    this.loadingStats = true;
+    this._owmStats.getData().subscribe(stats => {
+      this.stats = stats;
+      this.loadingStats = false;
+    });
     this.onChange();
   }
   ngOnInit() {}
@@ -37,6 +52,7 @@ export class ForecastComponent implements OnInit {
         this.weatherData = data;
         this.weatherDataSubscription$.unsubscribe();
         this.loading = false;
-      });
+      },
+      err => console.log('ForecastComponent data Error:', err));
   }
 }
