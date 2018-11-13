@@ -2,5 +2,5 @@ export interface City {
   name: string;
   country: string;
   iso2: string;
-  id: number;
+  id?: number;
 }

@@ -18,16 +18,17 @@
       <span fxFlex="1 1" fxLayoutAlign="end center">
         <mat-form-field [fxHide]="loading">
           <mat-select placeholder="City" [(value)]="selectedCityId" (selectionChange)="onChange()">
-            <mat-option *ngFor="let city of cities$ | async" [value]="city.id">
+            <mat-option *ngFor="let city of cities$ | async | keyvalue | sortCities" [value]="city.key">
               <span fxFlex>
-                {{city.name}}
+                {{city.value.name}}
               </span>
               <span fxFlex fxLayoutAlign="end center">
-                {{city.iso2}}
+                {{city.value.iso2}}
               </span>
             </mat-option>
           </mat-select>
         </mat-form-field>
+
       </span>
     </div>
 

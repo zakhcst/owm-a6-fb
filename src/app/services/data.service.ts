@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
-
+import { ConstantsService } from './constants.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -8,10 +8,10 @@ export class DataService {
   constructor(private _db: AngularFireDatabase) {}
 
   getData(cityId) {
-    return this._db.object(cityId).valueChanges();
+    return this._db.object(ConstantsService.owmData + '/' + cityId).valueChanges();
   }
   setData(cityId, data) {
-    const ref = this._db.object(cityId);
+    const ref = this._db.object(ConstantsService.owmData + '/' + cityId);
     return ref.set(data);
   }
 }

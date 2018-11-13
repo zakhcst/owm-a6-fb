@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { CitiesService } from '../../services/cities.service';
 import { TimeTemplate } from '../../models/hours.model';
+import { City } from '../../models/city.model';
 
 @Component({
   selector: 'app-forecast',
@@ -11,7 +12,7 @@ import { TimeTemplate } from '../../models/hours.model';
   styleUrls: ['./forecast.component.css']
 })
 export class ForecastComponent implements OnInit {
-  selectedCityId: number = ConstantsService.defaultCityId;
+  selectedCityId: string = ConstantsService.defaultCityId;
   timeTemplate: TimeTemplate[] = ConstantsService.timeTemplate;
   iconsUrl: string = ConstantsService.owmIconsUrl;
   iconWind: string = ConstantsService.windIconsUrl;
@@ -19,11 +20,11 @@ export class ForecastComponent implements OnInit {
   iconPressure: string = ConstantsService.pressureIconsUrl;
   loading: boolean;
   weatherDataSubscription$: Subscription;
-  cities$: Observable<any>;
-  weatherData;
+  cities$: Observable<{}>;
+  weatherData: any;
 
   constructor(private _cities: CitiesService, private _data: OwmDataService) {
-    this.cities$ = _cities.getData();
+    this.cities$ = this._cities.getData();
     this.onChange();
   }
   ngOnInit() {}
