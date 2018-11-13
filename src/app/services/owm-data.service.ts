@@ -37,10 +37,8 @@ export class OwmDataService {
     return diff > 3 * 3600 * 1000; // 3 hours
   }
 
-  // The additional logic is introduced
-  // to cache the data for 3 hours and then on request to get new data.
-  // All in order to prevent hitting OWM servers
-  // exessively and above the dev quote.
+  // Caching the data for 3h
+  // in order to prevent exceeding OWM servers dev quote.
   getData(cityId) {
     return this._data.getData(cityId).pipe(
       switchMap((fbdata: any) => {

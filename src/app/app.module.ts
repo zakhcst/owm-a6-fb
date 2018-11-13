@@ -11,9 +11,10 @@ import { LayoutsModules } from './modules/layouts/layouts.module';
 import { environment } from 'src/environments/environment';
 import { AppComponent } from './app.component';
 import { ForecastComponent } from './components/forecast/forecast.component';
+import { SortCitiesPipe } from './pipes/sort-cities.pipe';
 
 @NgModule({
-  declarations: [AppComponent, ForecastComponent],
+  declarations: [AppComponent, ForecastComponent, SortCitiesPipe],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -24,7 +25,7 @@ import { ForecastComponent } from './components/forecast/forecast.component';
     LayoutsModules
   ],
   exports: [],
-  providers: [],
+  providers: [SortCitiesPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
