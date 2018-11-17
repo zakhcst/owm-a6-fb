@@ -14,7 +14,7 @@ export class ConstantsService {
   public static readonly defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
   public static readonly owmFallbackData = 'assets/owm-fallback-data.json';
 
-  public static readonly owmIconsUrl = 'http://openweathermap.org/img/w/';
+  public static readonly owmIconsUrl = 'https://openweathermap.org/img/w/';
   public static readonly windIconsUrl = 'assets/icons8-windsock-16.png';
   public static readonly pressureIconsUrl = 'assets/icons8-atmospheric-pressure-16.png';
   public static readonly humidityIconsUrl = 'assets/icons8-hygrometer-16.png';
