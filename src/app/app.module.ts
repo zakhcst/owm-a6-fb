@@ -13,6 +13,11 @@ import { AppComponent } from './app.component';
 import { ForecastComponent } from './components/forecast/forecast.component';
 import { SortCitiesPipe } from './pipes/sort-cities.pipe';
 
+import { NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { AppUserState } from './states/app.state';
+
 @NgModule({
   declarations: [AppComponent, ForecastComponent, SortCitiesPipe],
   imports: [
@@ -22,7 +27,12 @@ import { SortCitiesPipe } from './pipes/sort-cities.pipe';
     AngularFireDatabaseModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
-    LayoutsModules
+    LayoutsModules,
+    NgxsModule.forRoot([
+      AppUserState,
+    ]),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot()
   ],
   exports: [],
   providers: [SortCitiesPipe],

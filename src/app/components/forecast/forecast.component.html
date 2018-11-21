@@ -1,23 +1,49 @@
 <mat-card class="forecast-card">
   <div fxLayout="column" fxFill class="content">
-
-    <div fxLayout="column" fxLayout.gt-sm="row">
-      <span fxFlex="1 1" fxLayoutAlign="start center" *ngIf="!loadingCities && !loading">
+    <div fxLayout="column" fxLayout.gt-xs="row">
+      <span
+        fxFlex="1 1"
+        fxLayoutAlign="start center"
+        *ngIf="!loadingCities && !loading"
+        fxFlexOrder.xs="3"
+      >
         <span [fxHide]="loading">
           {{ weatherData?.updated ? 'Updated:' : 'Sample:' }}
-          {{ weatherData?.updated || (weatherData?.list)[0].dt * 1000 | date: 'EEE dd MMM HH:mm' }}
-          <br/>
-          {{ 'Forecast time slots: ' + weatherData?.cnt }}
+          {{
+            weatherData?.updated || (weatherData?.list)[0].dt * 1000
+              | date: 'EEE dd MMM HH:mm'
+          }}
+          <br />
+          {{ 'Forecast time slots: ' + weatherData?.cnt }} <br />
+          IP: {{ ip.getIP() | async }}
         </span>
       </span>
-      <span fxFlex="1 1" fxLayout="column" fxLayoutAlign="center center">
+      <span
+        fxFlex="1 1"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlexOrder.xs="1"
+      >
         <h4>OWM Forecast</h4>
       </span>
-      <span fxFlex="1 1" fxLayoutAlign="center end" [fxHide]="loadingCities || loading">
-        <span fxFlex></span>
-        <mat-form-field>
-          <mat-select placeholder="City" [(value)]="selectedCityId" (selectionChange)="onChange()">
-            <mat-option *ngFor="let city of (cities$ | async | keyvalue | sortCities)" [value]="city.key" >
+      <span
+        fxFlex="1 1"
+        fxLayoutAlign="center end"
+        fxLayoutAlign.xs="center start"
+        [fxHide]="loadingCities || loading"
+        fxFlexOrder.xs="2"
+      >
+        <span fxFlex fxFlexOrder.xs="2"></span>
+        <mat-form-field fxFlexOrder.xs="1">
+          <mat-select
+            placeholder="City"
+            [(value)]="selectedCityId"
+            (selectionChange)="onChange()"
+          >
+            <mat-option
+              *ngFor="let city of (cities$ | async | keyvalue | sortCities)"
+              [value]="city.key"
+            >
               <span fxFlex> {{ city.value.name }} </span>
               <span fxFlex fxLayoutAlign="end center">
                 {{ city.value.iso2 }}
@@ -191,16 +217,15 @@
     <div fxLayout="row">
       <span fxFlex fxLayoutAlign="start center">
         <span *ngIf="!loadingStats">
-          OWM
-          Requests:{{ stats.r || 0 }}
-          Updates:{{ stats.u || 0 }}
+          OWM Requests:{{ stats.r || 0 }} Updates:{{ stats.u || 0 }}
         </span>
       </span>
       <span fxFlex></span>
-      <span *ngIf="!loadingCities && !loading">
-        <span fxFlex>
-          {{ cities[selectedCityId].name + ' ' }}
-          Requests:{{ cities[selectedCityId].r || 0 }}
+      <span fxFlex fxLayoutAlign="end center">
+        <span *ngIf="!loadingCities && !loading" fxLayoutAlign="end center">
+          {{ cities[selectedCityId].name + ' ' }} Requests:{{
+            cities[selectedCityId].r || 0
+          }}
           Updates:{{ cities[selectedCityId].u || 0 }}
         </span>
       </span>

@@ -13,6 +13,8 @@ export class ConstantsService {
   public static readonly defaultCityId = '2643743'; // London, UK
   public static readonly defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
   public static readonly owmFallbackData = 'assets/owm-fallback-data.json';
+  public static readonly getIpUrl = 'https://us-central1-owm-a6-fb.cloudfunctions.net/getip';
+  public static readonly ipRE = new RegExp('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$');
 
   public static readonly owmIconsUrl = 'https://openweathermap.org/img/w/';
   public static readonly windIconsUrl = 'assets/icons8-windsock-16.png';
