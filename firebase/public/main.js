@@ -103,12 +103,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
 /* harmony import */ var _components_forecast_forecast_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/forecast/forecast.component */ "./src/app/components/forecast/forecast.component.ts");
 /* harmony import */ var _pipes_sort_cities_pipe__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pipes/sort-cities.pipe */ "./src/app/pipes/sort-cities.pipe.ts");
+/* harmony import */ var _ngxs_store__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @ngxs/store */ "./node_modules/@ngxs/store/fesm5/ngxs-store.js");
+/* harmony import */ var _ngxs_devtools_plugin__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @ngxs/devtools-plugin */ "./node_modules/@ngxs/devtools-plugin/fesm5/ngxs-devtools-plugin.js");
+/* harmony import */ var _ngxs_logger_plugin__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @ngxs/logger-plugin */ "./node_modules/@ngxs/logger-plugin/fesm5/ngxs-logger-plugin.js");
+/* harmony import */ var _states_app_state__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./states/app.state */ "./src/app/states/app.state.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
+
 
 
 
@@ -134,7 +142,12 @@ var AppModule = /** @class */ (function () {
                 _angular_fire_database__WEBPACK_IMPORTED_MODULE_4__["AngularFireDatabaseModule"],
                 _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_5__["BrowserAnimationsModule"],
                 _modules_angular_material_angular_material_module__WEBPACK_IMPORTED_MODULE_6__["AngularMaterialModule"],
-                _modules_layouts_layouts_module__WEBPACK_IMPORTED_MODULE_7__["LayoutsModules"]
+                _modules_layouts_layouts_module__WEBPACK_IMPORTED_MODULE_7__["LayoutsModules"],
+                _ngxs_store__WEBPACK_IMPORTED_MODULE_12__["NgxsModule"].forRoot([
+                    _states_app_state__WEBPACK_IMPORTED_MODULE_15__["AppUserState"],
+                ]),
+                _ngxs_devtools_plugin__WEBPACK_IMPORTED_MODULE_13__["NgxsReduxDevtoolsPluginModule"].forRoot(),
+                _ngxs_logger_plugin__WEBPACK_IMPORTED_MODULE_14__["NgxsLoggerPluginModule"].forRoot()
             ],
             exports: [],
             providers: [_pipes_sort_cities_pipe__WEBPACK_IMPORTED_MODULE_11__["SortCitiesPipe"]],
@@ -166,7 +179,7 @@ module.exports = ".forecast-card {\n  height: 95vh;\n  padding: 5px;\n  backgrou
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card class=\"forecast-card\">\n  <div fxLayout=\"column\" fxFill class=\"content\">\n\n    <div fxLayout=\"column\" fxLayout.gt-sm=\"row\">\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"start center\" *ngIf=\"!loadingCities && !loading\">\n        <span [fxHide]=\"loading\">\n          {{ weatherData?.updated ? 'Updated:' : 'Sample:' }}\n          {{ weatherData?.updated || (weatherData?.list)[0].dt * 1000 | date: 'EEE dd MMM HH:mm' }}\n          <br/>\n          {{ 'Forecast time slots: ' + weatherData?.cnt }}\n        </span>\n      </span>\n      <span fxFlex=\"1 1\" fxLayout=\"column\" fxLayoutAlign=\"center center\">\n        <h4>OWM Forecast</h4>\n      </span>\n      <span fxFlex=\"1 1\" fxLayoutAlign=\"center end\" [fxHide]=\"loadingCities || loading\">\n        <span fxFlex></span>\n        <mat-form-field>\n          <mat-select placeholder=\"City\" [(value)]=\"selectedCityId\" (selectionChange)=\"onChange()\">\n            <mat-option *ngFor=\"let city of (cities$ | async | keyvalue | sortCities)\" [value]=\"city.key\" >\n              <span fxFlex> {{ city.value.name }} </span>\n              <span fxFlex fxLayoutAlign=\"end center\">\n                {{ city.value.iso2 }}\n              </span>\n            </mat-option>\n          </mat-select>\n        </mat-form-field>\n      </span>\n    </div>\n\n    <div\n      fxFlex\n      fxLayout=\"row\"\n      [fxHide]=\"loading || loadingCities\"\n      class=\"scroll-this\"\n    >\n      <div fxFlex=\"8%\" fxLayout=\"column\" fxFill>\n        <div\n          fxFlex=\"10%\"\n          fxFlex.gt-sm=\"7%\"\n          fxLayout=\"column\"\n          class=\"table-00-background\"\n        >\n          <span fxLayoutAlign=\"end center\">Hour</span>\n          <div fxFlex></div>\n          <span fxLayoutAlign=\"start start\">Date</span>\n        </div>\n\n        <div fxFlex fxLayout=\"column\" fxFill>\n          <div\n            fxFlex\n            fxLayoutAlign=\"start center\"\n            class=\"table-date_cell-background\"\n            *ngFor=\"\n              let dataDaily of (weatherData?.listByDate | keyvalue);\n              index as $index\n            \"\n          >\n            <span fxLayout=\"column\" fxLayout.gt-md=\"row\">\n              <span> {{ dataDaily.key | date: 'EEE' }}&nbsp; </span>\n              <span> {{ dataDaily.key | date: 'dd MMM' }} </span>\n            </span>\n          </div>\n        </div>\n      </div>\n\n      <div fxFlex fxLayout=\"column\" class=\"scroll-this\">\n        <div fxFlex=\"10%\" fxFlex.gt-sm=\"7%\" fxLayout=\"row\">\n          <span\n            fxFlex\n            fxLayoutAlign=\"center center\"\n            class=\"table-header-background\"\n            *ngFor=\"let timeSlot of timeTemplate; index as ind\"\n            [ngStyle]=\"{\n              'background-color': timeTemplate[ind].bgColor,\n              color: timeTemplate[ind].textColor\n            }\"\n          >\n            {{ (timeSlot.hour > 9 ? '' : '0') + timeSlot.hour + ':00' }}\n          </span>\n        </div>\n\n        <div\n          fxFlex\n          *ngFor=\"\n            let dataDaily of (weatherData?.listByDate | keyvalue);\n            index as $index\n          \"\n        >\n          <span\n            fxFlex\n            fxLayout=\"row\"\n            *ngFor=\"let timeSlot of timeTemplate; index as ind\"\n          >\n            <span\n              fxFlex\n              class=\"table-data_cell_empty-background\"\n              *ngIf=\"!dataDaily.value[timeSlot.hour]\"\n            ></span>\n            <span\n              fxFlex\n              *ngIf=\"dataDaily.value[timeSlot.hour]\"\n              class=\"table-data_cell-background\"\n              [ngStyle]=\"{\n                'background-color': timeTemplate[ind].bgColor,\n                color: timeTemplate[ind].textColor\n              }\"\n              fxLayout=\"column\"\n              fxLayoutAlign=\"center center\"\n            >\n              <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n                <img\n                  [src]=\"\n                    iconsUrl +\n                    dataDaily.value[timeSlot.hour].weather[0].icon +\n                    '.png'\n                  \"\n                />\n                {{ dataDaily.value[timeSlot.hour].weather[0].main }}\n                {{\n                  dataDaily.value[timeSlot.hour].main.temp | number: '1.0-0'\n                }}&#176;C\n              </div>\n\n              <span fxLayout=\"column\">\n                <span\n                  fxFlex=\"25%\"\n                  fxLayout=\"row\"\n                  fxLayoutAlign=\"start end\"\n                  class=\"table-secondary_data_line\"\n                >\n                  <img [src]=\"iconPressure\" />\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{\n                        dataDaily.value[timeSlot.hour].main.pressure\n                          | number: '1.0-0'\n                      }}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>mm</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span\n                  fxFlex=\"25%\"\n                  fxLayout=\"row\"\n                  fxLayoutAlign=\"start end\"\n                  class=\"table-secondary_data_line\"\n                >\n                  <img [src]=\"iconWind\" />\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{\n                        dataDaily.value[timeSlot.hour].wind.speed\n                          | number: '1.0-0'\n                      }}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>m/s</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span\n                  fxFlex=\"25%\"\n                  fxLayout=\"row\"\n                  fxLayoutAlign=\"start end\"\n                  class=\"table-secondary_data_line\"\n                >\n                  <img [src]=\"iconHumidity\" />\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{\n                        dataDaily.value[timeSlot.hour].main.humidity\n                          | number: '1.0-0'\n                      }}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>%</small>&nbsp;\n                    </span>\n                  </span>\n                </span>\n              </span>\n            </span>\n          </span>\n        </div>\n      </div>\n    </div>\n    <div fxLayout=\"row\">\n      <span fxFlex fxLayoutAlign=\"start center\">\n        <span *ngIf=\"!loadingStats\">\n          OWM\n          Requests:{{ stats.r || 0 }}\n          Updates:{{ stats.u || 0 }}\n        </span>\n      </span>\n      <span fxFlex></span>\n      <span *ngIf=\"!loadingCities && !loading\">\n        <span fxFlex>\n          {{ cities[selectedCityId].name + ' ' }}\n          Requests:{{ cities[selectedCityId].r || 0 }}\n          Updates:{{ cities[selectedCityId].u || 0 }}\n        </span>\n      </span>\n    </div>\n    <div fxFlex fxLayout=\"column\" fxLayoutAlign=\"center center\" *ngIf=\"loading\">\n      <mat-spinner></mat-spinner>\n    </div>\n  </div>\n</mat-card>\n"
+module.exports = "<mat-card class=\"forecast-card\">\n  <div fxLayout=\"column\" fxFill class=\"content\">\n    <div fxLayout=\"column\" fxLayout.gt-xs=\"row\">\n      <span\n        fxFlex=\"1 1\"\n        fxLayoutAlign=\"start center\"\n        *ngIf=\"!loadingCities && !loading\"\n        fxFlexOrder.xs=\"3\"\n      >\n        <span [fxHide]=\"loading\">\n          {{ weatherData?.updated ? 'Updated:' : 'Sample:' }}\n          {{\n            weatherData?.updated || (weatherData?.list)[0].dt * 1000\n              | date: 'EEE dd MMM HH:mm'\n          }}\n          <br />\n          {{ 'Forecast time slots: ' + weatherData?.cnt }} <br />\n          IP: {{ ip.getIP() | async }}\n        </span>\n      </span>\n      <span\n        fxFlex=\"1 1\"\n        fxLayout=\"column\"\n        fxLayoutAlign=\"center center\"\n        fxFlexOrder.xs=\"1\"\n      >\n        <h4>OWM Forecast</h4>\n      </span>\n      <span\n        fxFlex=\"1 1\"\n        fxLayoutAlign=\"center end\"\n        fxLayoutAlign.xs=\"center start\"\n        [fxHide]=\"loadingCities || loading\"\n        fxFlexOrder.xs=\"2\"\n      >\n        <span fxFlex fxFlexOrder.xs=\"2\"></span>\n        <mat-form-field fxFlexOrder.xs=\"1\">\n          <mat-select\n            placeholder=\"City\"\n            [(value)]=\"selectedCityId\"\n            (selectionChange)=\"onChange()\"\n          >\n            <mat-option\n              *ngFor=\"let city of (cities$ | async | keyvalue | sortCities)\"\n              [value]=\"city.key\"\n            >\n              <span fxFlex> {{ city.value.name }} </span>\n              <span fxFlex fxLayoutAlign=\"end center\">\n                {{ city.value.iso2 }}\n              </span>\n            </mat-option>\n          </mat-select>\n        </mat-form-field>\n      </span>\n    </div>\n\n    <div\n      fxFlex\n      fxLayout=\"row\"\n      [fxHide]=\"loading || loadingCities\"\n      class=\"scroll-this\"\n    >\n      <div fxFlex=\"8%\" fxLayout=\"column\" fxFill>\n        <div\n          fxFlex=\"10%\"\n          fxFlex.gt-sm=\"7%\"\n          fxLayout=\"column\"\n          class=\"table-00-background\"\n        >\n          <span fxLayoutAlign=\"end center\">Hour</span>\n          <div fxFlex></div>\n          <span fxLayoutAlign=\"start start\">Date</span>\n        </div>\n\n        <div fxFlex fxLayout=\"column\" fxFill>\n          <div\n            fxFlex\n            fxLayoutAlign=\"start center\"\n            class=\"table-date_cell-background\"\n            *ngFor=\"\n              let dataDaily of (weatherData?.listByDate | keyvalue);\n              index as $index\n            \"\n          >\n            <span fxLayout=\"column\" fxLayout.gt-md=\"row\">\n              <span> {{ dataDaily.key | date: 'EEE' }}&nbsp; </span>\n              <span> {{ dataDaily.key | date: 'dd MMM' }} </span>\n            </span>\n          </div>\n        </div>\n      </div>\n\n      <div fxFlex fxLayout=\"column\" class=\"scroll-this\">\n        <div fxFlex=\"10%\" fxFlex.gt-sm=\"7%\" fxLayout=\"row\">\n          <span\n            fxFlex\n            fxLayoutAlign=\"center center\"\n            class=\"table-header-background\"\n            *ngFor=\"let timeSlot of timeTemplate; index as ind\"\n            [ngStyle]=\"{\n              'background-color': timeTemplate[ind].bgColor,\n              color: timeTemplate[ind].textColor\n            }\"\n          >\n            {{ (timeSlot.hour > 9 ? '' : '0') + timeSlot.hour + ':00' }}\n          </span>\n        </div>\n\n        <div\n          fxFlex\n          *ngFor=\"\n            let dataDaily of (weatherData?.listByDate | keyvalue);\n            index as $index\n          \"\n        >\n          <span\n            fxFlex\n            fxLayout=\"row\"\n            *ngFor=\"let timeSlot of timeTemplate; index as ind\"\n          >\n            <span\n              fxFlex\n              class=\"table-data_cell_empty-background\"\n              *ngIf=\"!dataDaily.value[timeSlot.hour]\"\n            ></span>\n            <span\n              fxFlex\n              *ngIf=\"dataDaily.value[timeSlot.hour]\"\n              class=\"table-data_cell-background\"\n              [ngStyle]=\"{\n                'background-color': timeTemplate[ind].bgColor,\n                color: timeTemplate[ind].textColor\n              }\"\n              fxLayout=\"column\"\n              fxLayoutAlign=\"center center\"\n            >\n              <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n                <img\n                  [src]=\"\n                    iconsUrl +\n                    dataDaily.value[timeSlot.hour].weather[0].icon +\n                    '.png'\n                  \"\n                />\n                {{ dataDaily.value[timeSlot.hour].weather[0].main }}\n                {{\n                  dataDaily.value[timeSlot.hour].main.temp | number: '1.0-0'\n                }}&#176;C\n              </div>\n\n              <span fxLayout=\"column\">\n                <span\n                  fxFlex=\"25%\"\n                  fxLayout=\"row\"\n                  fxLayoutAlign=\"start end\"\n                  class=\"table-secondary_data_line\"\n                >\n                  <img [src]=\"iconPressure\" />\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{\n                        dataDaily.value[timeSlot.hour].main.pressure\n                          | number: '1.0-0'\n                      }}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>mm</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span\n                  fxFlex=\"25%\"\n                  fxLayout=\"row\"\n                  fxLayoutAlign=\"start end\"\n                  class=\"table-secondary_data_line\"\n                >\n                  <img [src]=\"iconWind\" />\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{\n                        dataDaily.value[timeSlot.hour].wind.speed\n                          | number: '1.0-0'\n                      }}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>m/s</small>\n                    </span>\n                  </span>\n                </span>\n\n                <span\n                  fxFlex=\"25%\"\n                  fxLayout=\"row\"\n                  fxLayoutAlign=\"start end\"\n                  class=\"table-secondary_data_line\"\n                >\n                  <img [src]=\"iconHumidity\" />\n                  <span fxFill class=\"table-secondary_data-opacity\">\n                    <span fxFlex=\"50%\" fxLayoutAlign=\"end end\">\n                      &nbsp;{{\n                        dataDaily.value[timeSlot.hour].main.humidity\n                          | number: '1.0-0'\n                      }}\n                    </span>\n                    <span fxFlex fxLayoutAlign=\"start end\">\n                      &nbsp;<small>%</small>&nbsp;\n                    </span>\n                  </span>\n                </span>\n              </span>\n            </span>\n          </span>\n        </div>\n      </div>\n    </div>\n    <div fxLayout=\"row\">\n      <span fxFlex fxLayoutAlign=\"start center\">\n        <span *ngIf=\"!loadingStats\">\n          OWM Requests:{{ stats.r || 0 }} Updates:{{ stats.u || 0 }}\n        </span>\n      </span>\n      <span fxFlex></span>\n      <span fxFlex fxLayoutAlign=\"end center\">\n        <span *ngIf=\"!loadingCities && !loading\" fxLayoutAlign=\"end center\">\n          {{ cities[selectedCityId].name + ' ' }} Requests:{{\n            cities[selectedCityId].r || 0\n          }}\n          Updates:{{ cities[selectedCityId].u || 0 }}\n        </span>\n      </span>\n    </div>\n    <div fxFlex fxLayout=\"column\" fxLayoutAlign=\"center center\" *ngIf=\"loading\">\n      <mat-spinner></mat-spinner>\n    </div>\n  </div>\n</mat-card>\n"
 
 /***/ }),
 
@@ -186,6 +199,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_cities_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/cities.service */ "./src/app/services/cities.service.ts");
 /* harmony import */ var _services_owm_stats_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/owm-stats.service */ "./src/app/services/owm-stats.service.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _ngxs_store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ngxs/store */ "./node_modules/@ngxs/store/fesm5/ngxs-store.js");
+/* harmony import */ var _states_app_actions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../states/app.actions */ "./src/app/states/app.actions.ts");
+/* harmony import */ var src_app_services_get_browser_ip_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/app/services/get-browser-ip.service */ "./src/app/services/get-browser-ip.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -201,18 +217,25 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
+
 var ForecastComponent = /** @class */ (function () {
-    function ForecastComponent(_cities, _data, _owmStats) {
-        var _this = this;
+    function ForecastComponent(_cities, _data, _owmStats, _store, ip) {
         this._cities = _cities;
         this._data = _data;
         this._owmStats = _owmStats;
+        this._store = _store;
+        this.ip = ip;
         this.selectedCityId = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].defaultCityId;
         this.timeTemplate = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].timeTemplate;
         this.iconsUrl = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].owmIconsUrl;
         this.iconWind = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].windIconsUrl;
         this.iconHumidity = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].humidityIconsUrl;
         this.iconPressure = _services_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].pressureIconsUrl;
+    }
+    ForecastComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.loadingCities = true;
         this.cities$ = this._cities.getData().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function (cities) {
             _this.cities = cities;
@@ -224,8 +247,7 @@ var ForecastComponent = /** @class */ (function () {
             _this.loadingStats = false;
         });
         this.onChange();
-    }
-    ForecastComponent.prototype.ngOnInit = function () { };
+    };
     ForecastComponent.prototype.onChange = function () {
         var _this = this;
         this.loading = true;
@@ -235,6 +257,7 @@ var ForecastComponent = /** @class */ (function () {
             _this.weatherData = data;
             _this.weatherDataSubscription$.unsubscribe();
             _this.loading = false;
+            _this._store.dispatch(new _states_app_actions__WEBPACK_IMPORTED_MODULE_7__["SetUserState"]({ cityId: _this.selectedCityId }));
         }, function (err) { return console.log('ForecastComponent data Error:', err); });
     };
     ForecastComponent = __decorate([
@@ -243,7 +266,11 @@ var ForecastComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./forecast.component.html */ "./src/app/components/forecast/forecast.component.html"),
             styles: [__webpack_require__(/*! ./forecast.component.css */ "./src/app/components/forecast/forecast.component.css")]
         }),
-        __metadata("design:paramtypes", [_services_cities_service__WEBPACK_IMPORTED_MODULE_3__["CitiesService"], _services_owm_data_service__WEBPACK_IMPORTED_MODULE_1__["OwmDataService"], _services_owm_stats_service__WEBPACK_IMPORTED_MODULE_4__["OwmStatsService"]])
+        __metadata("design:paramtypes", [_services_cities_service__WEBPACK_IMPORTED_MODULE_3__["CitiesService"],
+            _services_owm_data_service__WEBPACK_IMPORTED_MODULE_1__["OwmDataService"],
+            _services_owm_stats_service__WEBPACK_IMPORTED_MODULE_4__["OwmStatsService"],
+            _ngxs_store__WEBPACK_IMPORTED_MODULE_6__["Store"],
+            src_app_services_get_browser_ip_service__WEBPACK_IMPORTED_MODULE_8__["GetBrowserIpService"]])
     ], ForecastComponent);
     return ForecastComponent;
 }());
@@ -431,6 +458,8 @@ var ConstantsService = /** @class */ (function () {
     ConstantsService.defaultCityId = '2643743'; // London, UK
     ConstantsService.defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
     ConstantsService.owmFallbackData = 'assets/owm-fallback-data.json';
+    ConstantsService.getIpUrl = 'https://us-central1-owm-a6-fb.cloudfunctions.net/getip';
+    ConstantsService.ipRE = new RegExp('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$');
     ConstantsService.owmIconsUrl = 'https://openweathermap.org/img/w/';
     ConstantsService.windIconsUrl = 'assets/icons8-windsock-16.png';
     ConstantsService.pressureIconsUrl = 'assets/icons8-atmospheric-pressure-16.png';
@@ -502,6 +531,78 @@ var DataService = /** @class */ (function () {
         __metadata("design:paramtypes", [_angular_fire_database__WEBPACK_IMPORTED_MODULE_1__["AngularFireDatabase"]])
     ], DataService);
     return DataService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/get-browser-ip.service.ts":
+/*!****************************************************!*\
+  !*** ./src/app/services/get-browser-ip.service.ts ***!
+  \****************************************************/
+/*! exports provided: GetBrowserIpService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetBrowserIpService", function() { return GetBrowserIpService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _constants_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constants.service */ "./src/app/services/constants.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var GetBrowserIpService = /** @class */ (function () {
+    function GetBrowserIpService(_http) {
+        this._http = _http;
+        this.countCache = 0;
+        this.countRequests = 0;
+    }
+    GetBrowserIpService.prototype.getIP = function () {
+        if (!this._cache$) {
+            this._cache$ = this.requestIP().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["shareReplay"])(1));
+            this.countRequests++;
+        }
+        else {
+            this.countCache++;
+        }
+        console.log("getIP " + (this.countCache + this.countRequests) + " Cache " + this.countCache + " requests " + this.countRequests);
+        return this._cache$;
+    };
+    GetBrowserIpService.prototype.requestIP = function () {
+        var _this = this;
+        return this._http.get(_constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].getIpUrl, { responseType: 'text' })
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (ipString) {
+            if (_this.validateIP(ipString)) {
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(ipString);
+            }
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(null);
+        }));
+    };
+    GetBrowserIpService.prototype.validateIP = function (testString) {
+        return _constants_service__WEBPACK_IMPORTED_MODULE_2__["ConstantsService"].ipRE.test(testString);
+    };
+    GetBrowserIpService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
+    ], GetBrowserIpService);
+    return GetBrowserIpService;
 }());
 
 
@@ -742,6 +843,93 @@ var OwmService = /** @class */ (function () {
         __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
     ], OwmService);
     return OwmService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/states/app.actions.ts":
+/*!***************************************!*\
+  !*** ./src/app/states/app.actions.ts ***!
+  \***************************************/
+/*! exports provided: SetUserState */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SetUserState", function() { return SetUserState; });
+var SetUserState = /** @class */ (function () {
+    function SetUserState(payload) {
+        this.payload = payload;
+    }
+    SetUserState.type = '[activity] set';
+    return SetUserState;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/states/app.state.ts":
+/*!*************************************!*\
+  !*** ./src/app/states/app.state.ts ***!
+  \*************************************/
+/*! exports provided: AppUserState */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppUserState", function() { return AppUserState; });
+/* harmony import */ var _ngxs_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @ngxs/store */ "./node_modules/@ngxs/store/fesm5/ngxs-store.js");
+/* harmony import */ var _app_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app.actions */ "./src/app/states/app.actions.ts");
+/* harmony import */ var _services_get_browser_ip_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/get-browser-ip.service */ "./src/app/services/get-browser-ip.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var AppUserState = /** @class */ (function () {
+    function AppUserState(_ip) {
+        this._ip = _ip;
+    }
+    AppUserState.prototype.setUserState = function (_a, action) {
+        var patchState = _a.patchState;
+        console.log('payload:', action.payload);
+        return this._ip.getIP()
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (ip) {
+            action.payload.ip = ip;
+            action.payload.time = new Date().valueOf();
+            patchState(action.payload);
+        }));
+    };
+    __decorate([
+        Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_0__["Action"])(_app_actions__WEBPACK_IMPORTED_MODULE_1__["SetUserState"]),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, _app_actions__WEBPACK_IMPORTED_MODULE_1__["SetUserState"]]),
+        __metadata("design:returntype", void 0)
+    ], AppUserState.prototype, "setUserState", null);
+    AppUserState = __decorate([
+        Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_0__["State"])({
+            name: 'activity',
+            defaults: {
+                cityId: '',
+                time: new Date().valueOf(),
+                ip: ''
+            }
+        }),
+        __metadata("design:paramtypes", [_services_get_browser_ip_service__WEBPACK_IMPORTED_MODULE_2__["GetBrowserIpService"]])
+    ], AppUserState);
+    return AppUserState;
 }());
 
 

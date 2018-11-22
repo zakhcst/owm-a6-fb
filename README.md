@@ -20,4 +20,4 @@ https://owm-a6-fb.firebaseapp.com/
 
 
 ## Preview screen
-![alt text](https://raw.githubusercontent.com/zakhcst/owm-a6-fb/master/preview.png)
+![alt text](https://raw.githubusercontent.com/zakhcst/owm-a6-fb/master/preview1.png)
