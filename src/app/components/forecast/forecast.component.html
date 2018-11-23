@@ -15,7 +15,7 @@
           }}
           <br />
           {{ 'Forecast time slots: ' + weatherData?.cnt }} <br />
-          IP: {{ ip.getIP() | async }}
+          {{ ip ? 'IP: ' + ip : '' }}
         </span>
       </span>
       <span

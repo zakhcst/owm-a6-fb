@@ -31,13 +31,14 @@ export class ForecastComponent implements OnInit {
   cities: {};
   stats: OwmStats;
   weatherData: any;
+  ip: string;
 
   constructor(
     private _cities: CitiesService,
     private _data: OwmDataService,
     private _owmStats: OwmStatsService,
     private _store: Store,
-    public ip: GetBrowserIpService
+    private _ip: GetBrowserIpService
   ) {}
 
   ngOnInit() {
@@ -52,6 +53,9 @@ export class ForecastComponent implements OnInit {
     this._owmStats.getData().subscribe(stats => {
       this.stats = stats;
       this.loadingStats = false;
+    });
+    this._ip.getIP().subscribe(ip => {
+      this.ip = ip;
     });
     this.onChange();
   }

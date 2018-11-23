@@ -35,7 +35,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ## Link
 
-https://owm-a6-fb.firebaseapp.com/
+Development build is depolyed at: https://owm-a6-fb.firebaseapp.com/
 
 ## Preview screen
 
