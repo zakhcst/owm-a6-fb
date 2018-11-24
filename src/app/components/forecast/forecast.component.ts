@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { OwmDataService } from '../../services/owm-data.service';
-import { Observable, Subscription, from } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { SetUserState } from '../../states/app.actions';
+import { OwmStats } from '../../models/owm-stats.model';
+import { TimeTemplate } from '../../models/hours.model';
 import { ConstantsService } from '../../services/constants.service';
 import { CitiesService } from '../../services/cities.service';
 import { OwmStatsService } from '../../services/owm-stats.service';
-import { TimeTemplate } from '../../models/hours.model';
-import { OwmStats } from '../../models/owm-stats.model';
-import { tap } from 'rxjs/operators';
-import { Store, Select } from '@ngxs/store';
-import { SetUserState } from '../../states/app.actions';
-import { GetBrowserIpService } from 'src/app/services/get-browser-ip.service';
+import { GetBrowserIpService } from '../../services/get-browser-ip.service';
 
 @Component({
   selector: 'app-forecast',

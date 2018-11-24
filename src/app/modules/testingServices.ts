@@ -7,5 +7,5 @@ import { environment } from 'src/environments/environment';
 export const AppServivesModules = [
   HttpClientModule,
   AngularFireModule.initializeApp(environment.firebase),
-  AngularFireDatabaseModule,
+  AngularFireDatabaseModule
 ];

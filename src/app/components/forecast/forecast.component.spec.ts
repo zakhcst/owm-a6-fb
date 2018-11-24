@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { AppModules } from '../../modules/testing';
 import { ForecastComponent } from './forecast.component';
+import { NgxsModule } from '@ngxs/store';
+import { AppUserState } from '../../states/app.state';
+import { SortCitiesPipe } from '../../pipes/sort-cities.pipe';
 
 describe('ForecastComponent', () => {
   let component: ForecastComponent;
@@ -8,10 +12,13 @@ describe('ForecastComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ForecastComponent],
-      imports: [AppModules]
-    })
-    .compileComponents();
+      declarations: [ForecastComponent, SortCitiesPipe],
+      imports: [
+        AppModules,
+        NgxsModule.forRoot([AppUserState])
+      ],
+      providers: []
+    }).compileComponents();
   }));
 
   beforeEach(() => {
