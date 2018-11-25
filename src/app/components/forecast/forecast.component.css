@@ -13,12 +13,12 @@
 }
 
 .table-data_cell_empty-background {
-  min-width: 115px;
+  min-width: 120px;
   margin: 2px;
 }
 
 .table-header-background {
-  min-width: 115px;
+  min-width: 120px;
   margin: 2px;
   background-color: rgba(119, 139, 255, 0.575);
 }
@@ -33,7 +33,7 @@
 }
 
 .table-data_cell-background {
-  min-width: 115px;
+  min-width: 120px;
   margin: 2px;
   padding: 2px 0 2px 0;
   /* background-color: rgb(100, 141, 253); */

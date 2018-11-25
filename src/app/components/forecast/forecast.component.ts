@@ -70,7 +70,7 @@ export class ForecastComponent implements OnInit {
           this.weatherDataSubscription$.unsubscribe();
           this.loading = false;
           this._store.dispatch(
-            new SetUserState({ cityId: this.selectedCityId })
+            new SetUserState(this.selectedCityId)
           );
         },
         err => console.log('ForecastComponent data Error:', err)

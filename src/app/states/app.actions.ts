@@ -2,6 +2,5 @@ import { AppUserStateModel } from './app.models';
 
 export class SetUserState {
   static readonly type = '[activity] set';
-  constructor(public payload: AppUserStateModel) {}
-  // constructor(public cityId: string) {}
+  constructor(public payload: string) {}
 }

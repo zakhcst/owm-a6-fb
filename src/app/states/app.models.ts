@@ -1,5 +1,11 @@
-export interface AppUserStateModel {
+export interface HistoryRecordModel {
   cityId: string;
-  time?: number;
+  time: number;
+}
+
+export interface AppUserStateModel {
+  // cityId: string;
+  // time?: number;
   ip?: string;
+  sessionHistory: HistoryRecordModel[];
 }

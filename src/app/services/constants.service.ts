@@ -8,6 +8,7 @@ export class ConstantsService {
   constructor() {}
 
   public static readonly owmData = 'owm';
+  public static readonly historyData = 'history';
   public static readonly default5DayForecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
   public static readonly defaultUnits = 'metric';
   public static readonly defaultCityId = '2643743'; // London, UK
