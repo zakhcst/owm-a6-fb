@@ -10,6 +10,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { CitiesService } from '../../services/cities.service';
 import { OwmStatsService } from '../../services/owm-stats.service';
 import { GetBrowserIpService } from '../../services/get-browser-ip.service';
+import { ErrorsService } from '../../services/errors.service';
 
 @Component({
   selector: 'app-forecast',
@@ -38,7 +39,8 @@ export class ForecastComponent implements OnInit {
     private _data: OwmDataService,
     private _owmStats: OwmStatsService,
     private _store: Store,
-    private _ip: GetBrowserIpService
+    private _ip: GetBrowserIpService,
+    private _errors: ErrorsService
   ) {}
 
   ngOnInit() {
@@ -76,7 +78,13 @@ export class ForecastComponent implements OnInit {
             })
           );
         },
-        err => console.log('ForecastComponent data Error:', err)
+        err => {
+          this._errors.dispatch({
+            userMessage:
+              'Connection or service problem. Please reload or try later.',
+            logMessage: 'ForecastComponent:onChange:subscribe ' + err.message
+          });
+        }
       );
   }
 }

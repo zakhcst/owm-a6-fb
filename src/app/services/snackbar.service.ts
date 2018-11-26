@@ -11,10 +11,10 @@ export class SnackbarService {
 
   show(data) {
     return this._matSnackbar.openFromComponent(AppSnackBarInnerComponent, {
-      duration: 2500,
+      duration: 2500 * (data.class === 'snackbar__error' ? 3 : 1),
       data,
       horizontalPosition: 'right',
-      verticalPosition: 'top',
+      verticalPosition: 'bottom',
       panelClass: data.class
     });
   }

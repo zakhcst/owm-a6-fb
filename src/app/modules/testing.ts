@@ -18,5 +18,5 @@ export const AppModules = [
   BrowserAnimationsModule,
   AngularMaterialModule,
   LayoutsModules,
-  MatSnackBarModule
+  MatSnackBarModule,
 ];

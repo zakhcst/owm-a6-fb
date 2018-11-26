@@ -12,7 +12,7 @@ body {
 }
 
 .snackbar__info {
-  color: white;
+  color: greenyellow;
   background: black;
 }
 .snackbar__error {
