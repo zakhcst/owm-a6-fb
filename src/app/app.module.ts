@@ -9,26 +9,23 @@ import { AngularMaterialModule } from './modules/angular-material/angular-materi
 import { LayoutsModules } from './modules/layouts/layouts.module';
 
 import { environment } from '../environments/environment';
-import { AppComponent } from './app.component';
 import { SortCitiesPipe } from './pipes/sort-cities.pipe';
 
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { AppUserState } from './states/app.state';
+
+import { AppComponent } from './app.component';
 import { ForecastComponent } from './components/forecast/forecast.component';
-import {
-  AppSnackBarComponent,
-  AppSnackBarInnerComponent
-} from './components/snack-bar/snack-bar.component';
+import { AppSnackBarInnerComponent } from './components/app-snack-bar-inner/app-snack-bar-inner.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SortCitiesPipe,
     ForecastComponent,
-    AppSnackBarComponent,
-    AppSnackBarInnerComponent
+    AppSnackBarInnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,7 +39,7 @@ import {
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot()
   ],
-  entryComponents: [AppSnackBarComponent],
+  entryComponents: [AppSnackBarInnerComponent],
   providers: [SortCitiesPipe],
   bootstrap: [AppComponent]
 })

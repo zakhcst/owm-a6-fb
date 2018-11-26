@@ -41,7 +41,7 @@ export class AppUserState {
           sessionHistory: [...context.getState().sessionHistory, newEntry]
         };
         context.patchState(update);
-        this._snackbar.show({ message: `Selected: ${action.payload.cityName}` });
+        this._snackbar.show({ message: `Selected: ${action.payload.cityName}` , class: 'snackbar__info'});
       }),
       tap(ip => {
         const history = context.getState().sessionHistory;

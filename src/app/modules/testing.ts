@@ -5,8 +5,9 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AngularMaterialModule } from '.././modules/angular-material/angular-material.module';
-import { LayoutsModules } from '.././modules/layouts/layouts.module';
+import { LayoutsModules } from './layouts/layouts.module';
 import { environment } from 'src/environments/environment';
+import { MatSnackBarModule } from '@angular/material';
 
 export const AppModules = [
   BrowserModule,
@@ -16,5 +17,6 @@ export const AppModules = [
   BrowserModule,
   BrowserAnimationsModule,
   AngularMaterialModule,
-  LayoutsModules
+  LayoutsModules,
+  MatSnackBarModule
 ];

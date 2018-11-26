@@ -10,3 +10,12 @@
 body {
   margin: 10px;
 }
+
+.snackbar__info {
+  color: white;
+  background: black;
+}
+.snackbar__error {
+  color: red;
+  background: black;
+}
