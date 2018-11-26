@@ -2,6 +2,7 @@ import { State, Action, StateContext } from '@ngxs/store';
 import { SetUserState } from './app.actions';
 import { AppUserStateModel, HistoryRecordModel } from './app.models';
 import { GetBrowserIpService } from '../services/get-browser-ip.service';
+import { SnackbarService } from '../services/snackbar.service';
 import { tap } from 'rxjs/operators';
 import { HistoryService } from '../services/history.service';
 
@@ -22,7 +23,8 @@ const defaults = {
 export class AppUserState {
   constructor(
     private _ip: GetBrowserIpService,
-    private _history: HistoryService
+    private _history: HistoryService,
+    private _snackbar: SnackbarService
   ) {}
 
   @Action(SetUserState)
@@ -31,7 +33,7 @@ export class AppUserState {
     return this._ip.getIP().pipe(
       tap(ip => {
         const newEntry: HistoryRecordModel = {
-          cityId: action.payload,
+          cityId: action.payload.cityId,
           time: new Date().valueOf()
         };
         const update = {
@@ -39,6 +41,7 @@ export class AppUserState {
           sessionHistory: [...context.getState().sessionHistory, newEntry]
         };
         context.patchState(update);
+        this._snackbar.show({ message: `Selected: ${action.payload.cityName}` });
       }),
       tap(ip => {
         const history = context.getState().sessionHistory;

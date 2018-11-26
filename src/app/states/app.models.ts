@@ -9,3 +9,8 @@ export interface AppUserStateModel {
   ip?: string;
   sessionHistory: HistoryRecordModel[];
 }
+
+export interface AppUserStatePayloadModel {
+  cityId: string;
+  cityName: string;
+}

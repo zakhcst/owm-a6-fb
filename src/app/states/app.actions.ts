@@ -1,6 +1,6 @@
-import { AppUserStateModel } from './app.models';
+import { AppUserStateModel, AppUserStatePayloadModel } from './app.models';
 
 export class SetUserState {
   static readonly type = '[activity] set';
-  constructor(public payload: string) {}
+  constructor(public payload: AppUserStatePayloadModel) {}
 }
