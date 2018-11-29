@@ -1,13 +1,16 @@
-<mat-card class="forecast-card">
-  <div fxLayout="column" fxFill class="content">
+<mat-card class="forecast-card" [ngSwitch]="loadingError">
+  <div fxLayout="column" fxFill class="content" *ngSwitchCase="true">
+    <h3>Connection or service problem. Please reload or try later.</h3>
+  </div>
+  <div fxLayout="column" fxFill class="content" *ngSwitchCase="false">
     <div fxLayout="column" fxLayout.gt-xs="row">
       <span
         fxFlex="1 1"
         fxLayoutAlign="start center"
-        *ngIf="!loadingCities && !loading"
+        *ngIf="!loadingCities && !loadingOwmData"
         fxFlexOrder.xs="3"
       >
-        <span [fxHide]="loading">
+        <span [fxHide]="loadingOwmData">
           {{ weatherData?.updated ? 'Updated:' : 'Sample:' }}
           {{
             weatherData?.updated || (weatherData?.list)[0].dt * 1000
@@ -30,7 +33,7 @@
         fxFlex="1 1"
         fxLayoutAlign="center end"
         fxLayoutAlign.xs="center start"
-        [fxHide]="loadingCities || loading"
+        [fxHide]="loadingCities || loadingOwmData"
         fxFlexOrder.xs="2"
       >
         <span fxFlex fxFlexOrder.xs="2"></span>
@@ -54,13 +57,14 @@
       </span>
     </div>
 
-    <div
-      fxFlex
-      fxLayout="row"
-      [fxHide]="loading || loadingCities"
-    >
+    <div fxFlex fxLayout="row" [fxHide]="loadingOwmData || loadingCities">
       <div class="table-column_0" fxLayout="column">
-        <div fxFlex="10%" fxFlex.gt-sm="7%" fxLayout="column" class="table-cell_00">
+        <div
+          fxFlex="10%"
+          fxFlex.gt-sm="7%"
+          fxLayout="column"
+          class="table-cell_00"
+        >
           <span fxLayoutAlign="end center">Hour</span>
           <div fxFlex></div>
           <span fxLayoutAlign="start start">Date</span>
@@ -217,7 +221,7 @@
       </span>
       <span fxFlex></span>
       <span fxFlex fxLayoutAlign="end center">
-        <span *ngIf="!loadingCities && !loading" fxLayoutAlign="end center">
+        <span *ngIf="!loadingCities && !loadingOwmData" fxLayoutAlign="end center">
           {{ cities[selectedCityId].name + ' ' }} Requests:{{
             cities[selectedCityId].r || 0
           }}
@@ -225,7 +229,7 @@
         </span>
       </span>
     </div>
-    <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="loading">
+    <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="loadingOwmData">
       <mat-spinner></mat-spinner>
     </div>
   </div>
