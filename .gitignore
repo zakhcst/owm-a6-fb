@@ -5,6 +5,7 @@
 /tmp
 /out-tsc
 firebase/.firebase
+firebase/public
 
 # dependencies
 /node_modules

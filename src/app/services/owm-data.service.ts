@@ -48,6 +48,9 @@ export class OwmDataService {
 
   // Caching the data for 3h
   // in order to prevent exceeding OWM requsts dev quote.
+  // The additional logic for processing/reformating the data
+  // is required in the front end in order to avoid
+  // http requests from CF
   getData(cityId) {
     return this._cities.updateReads(cityId).pipe(
       switchMap(() => from(this._data.getData(cityId))),

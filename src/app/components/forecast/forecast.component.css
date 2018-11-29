@@ -12,7 +12,7 @@
   overflow: auto;
 }
 
-.table-data_cell_empty-background {
+.table-cell_data_empty-background {
   min-width: 120px;
   margin: 2px;
 }
@@ -23,16 +23,21 @@
   background-color: rgba(119, 139, 255, 0.575);
 }
 
-.table-00-background {
+
+.table-column_0 {
+  width: 40px;
+}
+
+.table-cell_00 {
   padding: 5px 2px;
 }
 
-.table-date_cell-background {
+.table-cell_date {
   margin: 2px;
   padding: 5px 2px;
 }
 
-.table-data_cell-background {
+.table-cell_data-background {
   min-width: 120px;
   margin: 2px;
   padding: 2px 0 2px 0;
