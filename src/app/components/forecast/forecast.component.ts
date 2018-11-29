@@ -24,9 +24,10 @@ export class ForecastComponent implements OnInit {
   iconWind: string = ConstantsService.windIconsUrl;
   iconHumidity: string = ConstantsService.humidityIconsUrl;
   iconPressure: string = ConstantsService.pressureIconsUrl;
-  loading: boolean;
-  loadingCities: boolean;
-  loadingStats: boolean;
+  loadingOwmData = true;
+  loadingCities = true ;
+  loadingStats = true;
+  loadingError = false;
   weatherDataSubscription$: Subscription;
   cities$: Observable<{}>;
   cities: {};
@@ -44,14 +45,12 @@ export class ForecastComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadingCities = true;
     this.cities$ = this._cities.getData().pipe(
       tap(cities => {
         this.cities = cities;
         this.loadingCities = false;
       })
     );
-    this.loadingStats = true;
     this._owmStats.getData().subscribe(stats => {
       this.stats = stats;
       this.loadingStats = false;
@@ -63,14 +62,14 @@ export class ForecastComponent implements OnInit {
   }
 
   onChange() {
-    this.loading = true;
+    this.loadingOwmData = true;
     this.weatherDataSubscription$ = this._data
       .getData(this.selectedCityId)
       .subscribe(
         data => {
           this.weatherData = data;
           this.weatherDataSubscription$.unsubscribe();
-          this.loading = false;
+          this.loadingOwmData = false;
           this._store.dispatch(
             new SetUserState({
               cityId: this.selectedCityId,
@@ -79,6 +78,8 @@ export class ForecastComponent implements OnInit {
           );
         },
         err => {
+          this.loadingOwmData = false;
+          this.loadingError = true;
           this._errors.dispatch({
             userMessage:
               'Connection or service problem. Please reload or try later.',

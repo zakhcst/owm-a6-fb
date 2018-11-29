@@ -59,7 +59,7 @@ export class OwmDataService {
           userMessage: 'Connection or service problem',
           logMessage: 'OwmDataService:getData:FB:_data.getData  ' + err.message
         });
-        return throwError(err);
+        return throwError(new Error(err));
       }),
       switchMap((fbdata: any) => {
         if (fbdata !== null && this.isNotExpired(fbdata)) {
@@ -81,7 +81,7 @@ export class OwmDataService {
       catchError(err => {
         this._errors.dispatch({
           userMessage: 'Connection or service problem',
-          logMessage: 'OwmDataService:getData:AfterUpdate ' + err.message
+          logMessage: 'OwmDataService:getData:AfterUpdate: ' + err.message
         });
         return this._owmFallback.getData();
       })
