@@ -12,7 +12,7 @@ import { ErrorsService } from './errors.service';
 export class OwmDataService {
   constructor(
     private _owm: OwmService,
-    private _data: DataService,
+    private _fb: DataService,
     private _cities: CitiesService,
     private _owmFallback: OwmFallbackDataService,
     private _errors: ErrorsService
@@ -53,35 +53,30 @@ export class OwmDataService {
   // http requests from CF
   getData(cityId) {
     return this._cities.updateReads(cityId).pipe(
-      switchMap(() => from(this._data.getData(cityId))),
-      catchError(err => {
-        this._errors.dispatch({
-          userMessage: 'Connection or service problem',
-          logMessage: 'OwmDataService:getData:FB:_data.getData  ' + err.message
-        });
-        return throwError(new Error(err));
-      }),
+      switchMap(() => from(this._fb.getData(cityId))),
       switchMap((fbdata: any) => {
         if (fbdata !== null && this.isNotExpired(fbdata)) {
           return of(fbdata);
         }
+
         return this._owm.getData(cityId).pipe(
-          switchMap(res => of(this.setListByDate(res))),
-          switchMap(res => from(this._data.setData(cityId, res))),
           catchError(err => {
             this._errors.dispatch({
               userMessage: 'Connection or service problem',
-              logMessage: 'OwmDataService:getData:_data.setData  ' + err.message
+              logMessage: 'OwmDataService:getData:_owm.getData  ' + err.message
             });
             return throwError(new Error(err));
           }),
-          switchMap(() => this._data.getData(cityId))
+          switchMap(res => of(this.setListByDate(res))),
+          switchMap(res => from(this._fb.setData(cityId, res))),
+          switchMap(() => of(fbdata))
         );
+
       }),
       catchError(err => {
         this._errors.dispatch({
           userMessage: 'Connection or service problem',
-          logMessage: 'OwmDataService:getData:AfterUpdate: ' + err.message
+          logMessage: 'OwmDataService:getData:_fb.getData: ' + err.message
         });
         return this._owmFallback.getData();
       })
