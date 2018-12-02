@@ -18,6 +18,45 @@ export class OwmDataService {
     private _errors: ErrorsService
   ) {}
 
+  // Caching the data for 3h
+  // in order to prevent exceeding OWM requsts dev quote.
+  // The additional logic for processing/reformating the data
+  // is required in the front end in order to avoid
+  // http requests from CF
+  getData(cityId) {
+    return this._cities.updateReads(cityId).pipe(
+      switchMap(() => from(this._fb.getData(cityId))),
+      switchMap((fbdata: any) => {
+        if (fbdata !== null && this.isNotExpired(fbdata)) {
+          return of(fbdata);
+        }
+        return this.requestNewOwmData(cityId).pipe(switchMap(() => of(fbdata)));
+
+      }),
+      catchError(err => {
+        this._errors.dispatch({
+          userMessage: 'Connection or service problem',
+          logMessage: 'OwmDataService:getData:_fb.getData: ' + err.message
+        });
+        return this._owmFallback.getData();
+      })
+    );
+  }
+
+  requestNewOwmData(cityId) {
+    return this._owm.getData(cityId).pipe(
+      catchError(err => {
+        this._errors.dispatch({
+          userMessage: 'Connection or service problem',
+          logMessage: 'OwmDataService:getData:_owm.getData  ' + err.message
+        });
+        return throwError(new Error(err));
+      }),
+      switchMap(res => of(this.setListByDate(res))),
+      switchMap(res => from(this._fb.setData(cityId, res)))
+    );
+  }
+
   setListByDate(data) {
     data = data || { list: [] };
     data.listByDate = data.list.reduce((accumulator, item) => {
@@ -46,40 +85,4 @@ export class OwmDataService {
     return diff < 3 * 3600 * 1000; // 3 hours
   }
 
-  // Caching the data for 3h
-  // in order to prevent exceeding OWM requsts dev quote.
-  // The additional logic for processing/reformating the data
-  // is required in the front end in order to avoid
-  // http requests from CF
-  getData(cityId) {
-    return this._cities.updateReads(cityId).pipe(
-      switchMap(() => from(this._fb.getData(cityId))),
-      switchMap((fbdata: any) => {
-        if (fbdata !== null && this.isNotExpired(fbdata)) {
-          return of(fbdata);
-        }
-
-        return this._owm.getData(cityId).pipe(
-          catchError(err => {
-            this._errors.dispatch({
-              userMessage: 'Connection or service problem',
-              logMessage: 'OwmDataService:getData:_owm.getData  ' + err.message
-            });
-            return throwError(new Error(err));
-          }),
-          switchMap(res => of(this.setListByDate(res))),
-          switchMap(res => from(this._fb.setData(cityId, res))),
-          switchMap(() => of(fbdata))
-        );
-
-      }),
-      catchError(err => {
-        this._errors.dispatch({
-          userMessage: 'Connection or service problem',
-          logMessage: 'OwmDataService:getData:_fb.getData: ' + err.message
-        });
-        return this._owmFallback.getData();
-      })
-    );
-  }
 }
