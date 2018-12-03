@@ -28,12 +28,14 @@ export class ForecastComponent implements OnInit {
   loadingCities = true ;
   loadingStats = true;
   loadingError = false;
-  weatherDataSubscription$: Subscription;
+  weatherDataSubscription: Subscription;
   cities$: Observable<{}>;
   cities: {};
   stats: OwmStats;
+  statsSubscription: Subscription;
   weatherData: any;
   ip: string;
+  ipSubscription: Subscription;
 
   constructor(
     private _cities: CitiesService,
@@ -51,24 +53,25 @@ export class ForecastComponent implements OnInit {
         this.loadingCities = false;
       })
     );
-    this._owmStats.getData().subscribe(stats => {
+    this.statsSubscription = this._owmStats.getData().subscribe(stats => {
       this.stats = stats;
       this.loadingStats = false;
+      this.statsSubscription.unsubscribe();
     });
-    this._ip.getIP().subscribe(ip => {
+    this.ipSubscription = this._ip.getIP().subscribe(ip => {
       this.ip = ip;
+      this.ipSubscription.unsubscribe();
     });
     this.onChange();
   }
 
   onChange() {
     this.loadingOwmData = true;
-    this.weatherDataSubscription$ = this._data
+    this.weatherDataSubscription = this._data
       .getData(this.selectedCityId)
       .subscribe(
         data => {
           this.weatherData = data;
-          this.weatherDataSubscription$.unsubscribe();
           this.loadingOwmData = false;
           this._store.dispatch(
             new SetHistoryState({
@@ -85,7 +88,8 @@ export class ForecastComponent implements OnInit {
               'Connection or service problem. Please reload or try later.',
             logMessage: 'ForecastComponent:onChange:subscribe ' + err.message
           });
-        }
+        },
+        () => this.weatherDataSubscription.unsubscribe()
       );
   }
 }
