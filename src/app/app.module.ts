@@ -14,7 +14,7 @@ import { SortCitiesPipe } from './pipes/sort-cities.pipe';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
-import { AppUserState, AppErrorsState } from './states/app.state';
+import { AppHistoryState, AppErrorsState } from './states/app.state';
 
 import { AppComponent } from './app.component';
 import { ForecastComponent } from './components/forecast/forecast.component';
@@ -35,7 +35,7 @@ import { AppSnackBarInnerComponent } from './components/app-snack-bar-inner/app-
     BrowserAnimationsModule,
     AngularMaterialModule,
     LayoutsModules,
-    NgxsModule.forRoot([AppUserState, AppErrorsState]),
+    NgxsModule.forRoot([AppHistoryState, AppErrorsState]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot()
   ],

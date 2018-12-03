@@ -14,7 +14,7 @@ export class ErrorsService {
     const refKey =
       ConstantsService.errorsLog +
       '/' +
-      data.ip.replace(/\./g, '-') +
+      data.ip.replace(/\.|\:/g, '-') +
       '/' +
       data.time;
     const ref = this._db.object(refKey);

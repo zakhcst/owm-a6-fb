@@ -3,24 +3,13 @@ import { AppComponent } from './app.component';
 import { ForecastComponent } from './components/forecast/forecast.component';
 import { AppModules } from './modules/testing';
 import { SortCitiesPipe } from './pipes/sort-cities.pipe';
-import { NgxsModule } from '@ngxs/store';
-import { AppUserState } from './states/app.state';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        ForecastComponent,
-        SortCitiesPipe,
-      ],
-      imports: [
-        AppModules,
-        NgxsModule.forRoot([AppUserState])
-      ],
-      providers: [
-        AppComponent,
-      ],
+      declarations: [AppComponent, ForecastComponent, SortCitiesPipe],
+      imports: [AppModules],
+      providers: [AppComponent]
     }).compileComponents();
   }));
 
@@ -35,5 +24,4 @@ describe('AppComponent', () => {
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('owm-a6-fb');
   });
-
 });

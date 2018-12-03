@@ -8,6 +8,8 @@ import { AngularMaterialModule } from '.././modules/angular-material/angular-mat
 import { LayoutsModules } from './layouts/layouts.module';
 import { environment } from 'src/environments/environment';
 import { MatSnackBarModule } from '@angular/material';
+import { NgxsModule } from '@ngxs/store';
+import { AppHistoryState, AppErrorsState } from '../states/app.state';
 
 export const AppModules = [
   BrowserModule,
@@ -19,4 +21,5 @@ export const AppModules = [
   AngularMaterialModule,
   LayoutsModules,
   MatSnackBarModule,
+  NgxsModule.forRoot([AppHistoryState, AppErrorsState]),
 ];

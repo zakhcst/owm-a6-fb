@@ -22,7 +22,7 @@ const defaultActivity = {
   name: 'activity',
   defaults: defaultActivity
 })
-export class AppUserState {
+export class AppHistoryState {
   constructor(
     private _ip: GetBrowserIpService,
     private _history: HistoryService,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { of, from, throwError } from 'rxjs';
-import { switchMap, catchError, tap } from 'rxjs/operators';
+import { of, from } from 'rxjs';
+import { switchMap, catchError, map } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
 import { CitiesService } from './cities.service';
@@ -31,7 +31,6 @@ export class OwmDataService {
           return of(fbdata);
         }
         return this.requestNewOwmData(cityId).pipe(switchMap(() => of(fbdata)));
-
       }),
       catchError(err => {
         this._errors.add({
@@ -45,14 +44,7 @@ export class OwmDataService {
 
   requestNewOwmData(cityId) {
     return this._owm.getData(cityId).pipe(
-      catchError(err => {
-        this._errors.add({
-          userMessage: 'Connection or service problem',
-          logMessage: 'OwmDataService:getData:_owm.getData  ' + err.message
-        });
-        return throwError(new Error(err));
-      }),
-      switchMap(res => of(this.setListByDate(res))),
+      map(res => this.setListByDate(res)),
       switchMap(res => from(this._fb.setData(cityId, res)))
     );
   }
@@ -80,9 +72,11 @@ export class OwmDataService {
   isNotExpired(data): boolean {
     // expired data is when [0] is older than 3 hours
     const now = new Date().valueOf();
-    const firstSample = data.list[0].dt * 1000;
+    const firstSample =
+      (data.list && data.list.length > 0 && data.list[0].dt
+        ? data.list[0].dt
+        : 0) * 1000;
     const diff = now - (data.updated || firstSample);
     return diff < 3 * 3600 * 1000; // 3 hours
   }
-
 }
