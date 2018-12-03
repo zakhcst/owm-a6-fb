@@ -1,6 +1,6 @@
 import { State, Action, StateContext } from '@ngxs/store';
-import { SetUserState, SetErrorsState } from './app.actions';
-import { AppUserStateModel, HistoryRecordModel, AppErrorsStateModel, ErrorRecordModel } from './app.models';
+import { SetHistoryState, SetErrorsState } from './app.actions';
+import { AppHistoryModel, HistoryRecordModel, AppErrorsStateModel, ErrorRecordModel } from './app.models';
 import { GetBrowserIpService } from '../services/get-browser-ip.service';
 import { SnackbarService } from '../services/snackbar.service';
 import { tap, switchMap } from 'rxjs/operators';
@@ -18,7 +18,7 @@ const defaultActivity = {
   ]
 };
 
-@State<AppUserStateModel>({
+@State<AppHistoryModel>({
   name: 'activity',
   defaults: defaultActivity
 })
@@ -29,8 +29,8 @@ export class AppUserState {
     private _snackbar: SnackbarService
   ) {}
 
-  @Action(SetUserState)
-  setUserState(context: StateContext<AppUserStateModel>, action: SetUserState) {
+  @Action(SetHistoryState)
+  setHistoryState(context: StateContext<AppHistoryModel>, action: SetHistoryState) {
     console.log('payload:', action.payload);
     return this._ip.getIP().pipe(
       tap(ip => {

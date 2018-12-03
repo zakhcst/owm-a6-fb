@@ -1,8 +1,8 @@
-import { AppUserStatePayloadModel, AppErrorPayloadModel } from './app.models';
+import { AppHistoryPayloadModel, AppErrorPayloadModel } from './app.models';
 
-export class SetUserState {
+export class SetHistoryState {
   static readonly type = '[activity] set';
-  constructor(public payload: AppUserStatePayloadModel) {}
+  constructor(public payload: AppHistoryPayloadModel) {}
 }
 export class SetErrorsState {
   static readonly type = '[errors] set';

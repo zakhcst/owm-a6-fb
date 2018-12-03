@@ -2,12 +2,12 @@ export interface HistoryRecordModel {
   cityId: string;
   time: number;
 }
-export interface AppUserStateModel {
+export interface AppHistoryModel {
   ip?: string;
   sessionHistory: HistoryRecordModel[];
 }
 
-export interface AppUserStatePayloadModel {
+export interface AppHistoryPayloadModel {
   cityId: string;
   cityName: string;
 }

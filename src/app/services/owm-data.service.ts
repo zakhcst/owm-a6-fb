@@ -34,7 +34,7 @@ export class OwmDataService {
 
       }),
       catchError(err => {
-        this._errors.dispatch({
+        this._errors.add({
           userMessage: 'Connection or service problem',
           logMessage: 'OwmDataService:getData:_fb.getData: ' + err.message
         });
@@ -46,7 +46,7 @@ export class OwmDataService {
   requestNewOwmData(cityId) {
     return this._owm.getData(cityId).pipe(
       catchError(err => {
-        this._errors.dispatch({
+        this._errors.add({
           userMessage: 'Connection or service problem',
           logMessage: 'OwmDataService:getData:_owm.getData  ' + err.message
         });

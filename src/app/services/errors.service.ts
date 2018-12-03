@@ -21,7 +21,7 @@ export class ErrorsService {
     return ref.set(data.logMessage);
   }
 
-  dispatch({ userMessage, logMessage } ) {
+  add({ userMessage, logMessage } ) {
     this._store.dispatch(new SetErrorsState({ userMessage, logMessage }));
   }
 }

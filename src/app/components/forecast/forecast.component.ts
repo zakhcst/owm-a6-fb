@@ -3,7 +3,7 @@ import { OwmDataService } from '../../services/owm-data.service';
 import { Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { SetUserState } from '../../states/app.actions';
+import { SetHistoryState } from '../../states/app.actions';
 import { OwmStats } from '../../models/owm-stats.model';
 import { TimeTemplate } from '../../models/hours.model';
 import { ConstantsService } from '../../services/constants.service';
@@ -71,7 +71,7 @@ export class ForecastComponent implements OnInit {
           this.weatherDataSubscription$.unsubscribe();
           this.loadingOwmData = false;
           this._store.dispatch(
-            new SetUserState({
+            new SetHistoryState({
               cityId: this.selectedCityId,
               cityName: this.cities[this.selectedCityId].name
             })
@@ -80,7 +80,7 @@ export class ForecastComponent implements OnInit {
         err => {
           this.loadingOwmData = false;
           this.loadingError = true;
-          this._errors.dispatch({
+          this._errors.add({
             userMessage:
               'Connection or service problem. Please reload or try later.',
             logMessage: 'ForecastComponent:onChange:subscribe ' + err.message
