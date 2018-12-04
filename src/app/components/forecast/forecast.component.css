@@ -23,7 +23,6 @@
   background-color: rgba(119, 139, 255, 0.575);
 }
 
-
 .table-column_0 {
   width: 40px;
 }
@@ -49,16 +48,14 @@
 }
 
 .table-secondary_data_icon img {
-    width: 60%;
-    height: auto;
-  }
-
+  width: 60%;
+  height: auto;
+}
 
 .table-secondary_data-opacity {
   opacity: 0.6;
   /* margin: 2px 0 2px 0; */
 }
-
 
 @media only screen {
   .content {

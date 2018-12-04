@@ -4,49 +4,27 @@
   </div>
   <div fxLayout="column" fxFill class="content" *ngSwitchCase="false">
     <div fxLayout="column" fxLayout.gt-xs="row">
-      <span
-        fxFlex="1 1"
-        fxLayoutAlign="start center"
-        *ngIf="!loadingCities && !loadingOwmData"
-        fxFlexOrder.xs="3"
-      >
+      <span fxFlex="1 1" fxLayoutAlign="start center" *ngIf="!loadingCities && !loadingOwmData" fxFlexOrder.xs="3">
         <span [fxHide]="loadingOwmData">
           {{ weatherData?.updated ? 'Updated:' : 'Sample:' }}
           {{
-            weatherData?.updated || (weatherData?.list)[0].dt * 1000
-              | date: 'EEE dd MMM HH:mm'
+          weatherData?.updated || (weatherData?.list)[0].dt * 1000
+          | date: 'EEE dd MMM HH:mm'
           }}
           <br />
           {{ 'Forecast time slots: ' + weatherData?.cnt }} <br />
           {{ ip ? 'IP: ' + ip : '' }}
         </span>
       </span>
-      <span
-        fxFlex="1 1"
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        fxFlexOrder.xs="1"
-      >
+      <span fxFlex="1 1" fxLayout="column" fxLayoutAlign="center center" fxFlexOrder.xs="1">
         <h3>OWM Forecast</h3>
       </span>
-      <span
-        fxFlex="1 1"
-        fxLayoutAlign="center end"
-        fxLayoutAlign.xs="center start"
-        [fxHide]="loadingCities || loadingOwmData"
-        fxFlexOrder.xs="2"
-      >
+      <span fxFlex="1 1" fxLayoutAlign="center end" fxLayoutAlign.xs="center start" [fxHide]="loadingCities || loadingOwmData"
+        fxFlexOrder.xs="2">
         <span fxFlex fxFlexOrder.xs="2"></span>
         <mat-form-field fxFlexOrder.xs="1">
-          <mat-select
-            placeholder="City"
-            [(value)]="selectedCityId"
-            (selectionChange)="onChange()"
-          >
-            <mat-option
-              *ngFor="let city of (cities$ | async | keyvalue | sortCities)"
-              [value]="city.key"
-            >
+          <mat-select placeholder="City" [(value)]="selectedCityId" (selectionChange)="onChange()">
+            <mat-option *ngFor="let city of (cities$ | async | keyvalue | sortCities)" [value]="city.key">
               <span fxFlex> {{ city.value.name }} </span>
               <span fxFlex fxLayoutAlign="end center">
                 {{ city.value.iso2 }}
@@ -59,27 +37,17 @@
 
     <div fxFlex fxLayout="row" [fxHide]="loadingOwmData || loadingCities">
       <div class="table-column_0" fxLayout="column">
-        <div
-          fxFlex="10%"
-          fxFlex.gt-sm="7%"
-          fxLayout="column"
-          class="table-cell_00"
-        >
+        <div fxFlex="10%" fxFlex.gt-sm="7%" fxLayout="column" class="table-cell_00">
           <span fxLayoutAlign="end center">Hour</span>
           <div fxFlex></div>
           <span fxLayoutAlign="start start">Date</span>
         </div>
 
         <div fxFlex fxLayout="column" fxFill>
-          <div
-            fxFlex
-            fxLayoutAlign="start center"
-            class="table-cell_date"
-            *ngFor="
+          <div fxFlex fxLayoutAlign="start center" class="table-cell_date" *ngFor="
               let dataDaily of (weatherData?.listByDate | keyvalue);
               index as $index
-            "
-          >
+            ">
             <span fxLayout="column">
               <span>{{ dataDaily.key | date: 'EEE' }}</span>
               <span>{{ dataDaily.key | date: 'dd' }}</span>
@@ -91,75 +59,46 @@
 
       <div fxFlex fxLayout="column" class="scroll-this">
         <div fxFlex="10%" fxFlex.gt-sm="7%" fxLayout="row">
-          <span
-            fxFlex
-            fxLayoutAlign="center center"
-            class="table-header-background"
-            *ngFor="let timeSlot of timeTemplate; index as ind"
+          <span fxFlex fxLayoutAlign="center center" class="table-header-background" *ngFor="let timeSlot of timeTemplate; index as ind"
             [ngStyle]="{
               'background-color': timeTemplate[ind].bgColor,
               color: timeTemplate[ind].textColor
-            }"
-          >
+            }">
             {{ (timeSlot.hour > 9 ? '' : '0') + timeSlot.hour + ':00' }}
           </span>
         </div>
 
-        <div
-          fxFlex
-          *ngFor="
+        <div fxFlex *ngFor="
             let dataDaily of (weatherData?.listByDate | keyvalue);
             index as $index
-          "
-        >
-          <span
-            fxFlex
-            fxLayout="row"
-            *ngFor="let timeSlot of timeTemplate; index as ind"
-          >
-            <span
-              fxFlex
-              class="table-cell_data_empty-background"
-              *ngIf="!dataDaily.value[timeSlot.hour]"
-            ></span>
-            <span
-              fxFlex
-              *ngIf="dataDaily.value[timeSlot.hour]"
-              class="table-cell_data-background"
-              [ngStyle]="{
+          ">
+          <span fxFlex fxLayout="row" *ngFor="let timeSlot of timeTemplate; index as ind">
+            <span fxFlex class="table-cell_data_empty-background" *ngIf="!dataDaily.value[timeSlot.hour]"></span>
+            <span fxFlex *ngIf="dataDaily.value[timeSlot.hour]" class="table-cell_data-background" [ngStyle]="{
                 'background-color': timeTemplate[ind].bgColor,
                 color: timeTemplate[ind].textColor
               }"
-              fxLayout="column"
-              fxLayoutAlign="center center"
-            >
+              fxLayout="column" fxLayoutAlign="center center">
               <div fxFlex="25%" fxLayout="row" fxLayoutAlign="center center">
-                <img
-                  [src]="
+                <img [src]="
                     iconsUrl +
                     dataDaily.value[timeSlot.hour].weather[0].icon +
                     '.png'
-                  "
-                />
+                  " />
                 {{ dataDaily.value[timeSlot.hour].weather[0].main }}
                 {{
-                  dataDaily.value[timeSlot.hour].main.temp | number: '1.0-0'
+                dataDaily.value[timeSlot.hour].main.temp | number: '1.0-0'
                 }}&#176;C
               </div>
 
               <div fxFlex fxLayout="column">
-                <span
-                  fxFlex="25%"
-                  fxLayout="row"
-                  fxLayoutAlign="start end"
-                  class="table-secondary_data_line"
-                >
+                <span fxFlex="25%" fxLayout="row" fxLayoutAlign="start end" class="table-secondary_data_line">
                   <img [src]="iconPressure" />
                   <span fxFill class="table-secondary_data-opacity">
                     <span fxFlex="50%" fxLayoutAlign="end end">
                       &nbsp;{{
-                        dataDaily.value[timeSlot.hour].main.pressure
-                          | number: '1.0-0'
+                      dataDaily.value[timeSlot.hour].main.pressure
+                      | number: '1.0-0'
                       }}
                     </span>
                     <span fxFlex fxLayoutAlign="start end">
@@ -168,18 +107,19 @@
                   </span>
                 </span>
 
-                <span
-                  fxFlex="25%"
-                  fxLayout="row"
-                  fxLayoutAlign="start end"
-                  class="table-secondary_data_line"
-                >
+                <span fxFlex="25%" fxLayout="row" fxLayoutAlign="start end" class="table-secondary_data_line">
                   <img [src]="iconWind" />
                   <span fxFill class="table-secondary_data-opacity">
                     <span fxFlex="50%" fxLayoutAlign="end end">
+                      <span [style.transform]="
+                          'rotate(' +
+                          dataDaily.value[timeSlot.hour].wind.deg +
+                          'deg)'
+                        ">{{
+                        arrow000Deg }}</span>
                       &nbsp;{{
-                        dataDaily.value[timeSlot.hour].wind.speed
-                          | number: '1.0-0'
+                      dataDaily.value[timeSlot.hour].wind.speed
+                      | number: '1.0-0'
                       }}
                     </span>
                     <span fxFlex fxLayoutAlign="start end">
@@ -188,18 +128,13 @@
                   </span>
                 </span>
 
-                <span
-                  fxFlex="25%"
-                  fxLayout="row"
-                  fxLayoutAlign="start end"
-                  class="table-secondary_data_line"
-                >
+                <span fxFlex="25%" fxLayout="row" fxLayoutAlign="start end" class="table-secondary_data_line">
                   <img [src]="iconHumidity" />
                   <span fxFill class="table-secondary_data-opacity">
                     <span fxFlex="50%" fxLayoutAlign="end end">
                       &nbsp;{{
-                        dataDaily.value[timeSlot.hour].main.humidity
-                          | number: '1.0-0'
+                      dataDaily.value[timeSlot.hour].main.humidity
+                      | number: '1.0-0'
                       }}
                     </span>
                     <span fxFlex fxLayoutAlign="start end">
@@ -223,7 +158,7 @@
       <span fxFlex fxLayoutAlign="end center">
         <span *ngIf="!loadingCities && !loadingOwmData" fxLayoutAlign="end center">
           {{ cities[selectedCityId].name + ' ' }} Requests:{{
-            cities[selectedCityId].r || 0
+          cities[selectedCityId].r || 0
           }}
           Updates:{{ cities[selectedCityId].u || 0 }}
         </span>

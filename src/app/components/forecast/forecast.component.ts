@@ -24,6 +24,7 @@ export class ForecastComponent implements OnInit {
   iconWind: string = ConstantsService.windIconsUrl;
   iconHumidity: string = ConstantsService.humidityIconsUrl;
   iconPressure: string = ConstantsService.pressureIconsUrl;
+  arrow000Deg: string = ConstantsService.arrow000Deg;
   loadingOwmData = true;
   loadingCities = true ;
   loadingStats = true;
