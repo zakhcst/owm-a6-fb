@@ -17,7 +17,7 @@
         </span>
       </span>
       <span fxFlex="1 1" fxLayout="column" fxLayoutAlign="center center" fxFlexOrder.xs="1">
-        <h3>OWM Forecast</h3>
+        <h2>OWM Forecast</h2>
       </span>
       <span fxFlex="1 1" fxLayoutAlign="center end" fxLayoutAlign.xs="center start" [fxHide]="loadingCities || loadingOwmData"
         fxFlexOrder.xs="2">
@@ -165,7 +165,7 @@
       </span>
     </div>
     <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="loadingOwmData">
-      <mat-spinner></mat-spinner>
+      <mat-spinner diameter="50"></mat-spinner>
     </div>
   </div>
 </mat-card>
