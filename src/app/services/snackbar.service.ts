@@ -9,17 +9,15 @@ export class SnackbarService {
   public q = [];
   constructor(private _matSnackbar: MatSnackBar) {}
 
+  // The non buffered version cancels(hides) the previous message regardless of the duration
   // show(data) {
-  //   return this._matSnackbar.openFromComponent(AppSnackBarInnerComponent, {
-  //     duration: 2500 * (data.class === 'snackbar__error' ? 2 : 1),
-  //     data,
-  //     horizontalPosition: 'right',
-  //     verticalPosition: 'bottom',
-  //     panelClass: data.class
-  //   });
+  //   ref(data);
   // }
 
   // Queue the messages and show them sequentially with full duration
+  // The message is shown when it is at 0 position in the q[], only.
+  // The two cases are when called from the client or invoked on dismissing the previous.
+  // Otherwise just pishes the new message to the q.
   show(data) {
     if (this.q[0] !== data) {
       this.q.push(data);
@@ -33,7 +31,6 @@ export class SnackbarService {
         }
       });
     }
-
   }
 
   ref(data) {
