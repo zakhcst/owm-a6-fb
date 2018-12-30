@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 
 @Injectable({
@@ -23,8 +23,8 @@ export class SnackbarService {
       this.q.push(data);
     }
     if (this.q[0] === data) {
-      const ref = this.ref(data);
-      ref.afterDismissed().subscribe(() => {
+      const snackbarRef = this.ref(data);
+      snackbarRef.afterDismissed().subscribe(() => {
         this.q.shift();
         if (this.q.length > 0) {
           this.show(this.q[0]);

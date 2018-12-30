@@ -77,7 +77,8 @@ export class ForecastComponent implements OnInit {
           this._store.dispatch(
             new SetHistoryState({
               cityId: this.selectedCityId,
-              cityName: this.cities[this.selectedCityId].name
+              cityName: this.cities[this.selectedCityId].name,
+              countryISO2: this.cities[this.selectedCityId].iso2
             })
           );
         },

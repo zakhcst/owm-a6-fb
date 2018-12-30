@@ -10,6 +10,7 @@ export interface AppHistoryModel {
 export interface AppHistoryPayloadModel {
   cityId: string;
   cityName: string;
+  countryISO2: string;
 }
 
 export interface ErrorRecordModel {

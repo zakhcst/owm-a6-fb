@@ -40,7 +40,6 @@ import { AppSnackBarInnerComponent } from './components/app-snack-bar-inner/app-
     NgxsLoggerPluginModule.forRoot()
   ],
   entryComponents: [AppSnackBarInnerComponent],
-  providers: [SortCitiesPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

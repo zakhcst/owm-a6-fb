@@ -31,8 +31,8 @@ export class AppHistoryState {
 
   @Action(SetHistoryState)
   setHistoryState(context: StateContext<AppHistoryModel>, action: SetHistoryState) {
-    console.log('payload:', action.payload);
     return this._ip.getIP().pipe(
+      // Update local history state
       tap(ip => {
         const newEntry: HistoryRecordModel = {
           cityId: action.payload.cityId,
@@ -43,8 +43,13 @@ export class AppHistoryState {
           sessionHistory: [...context.getState().sessionHistory, newEntry]
         };
         context.patchState(update);
-        this._snackbar.show({ message: `Selected: ${action.payload.cityName}` , class: 'snackbar__info'});
+        this._snackbar.show({ message: `Selected: ${action.payload.cityName}, ${action.payload.countryISO2}` , class: 'snackbar__info'});
       }),
+      // Update localStorage
+      tap(ip => {
+        localStorage.lastCityId = action.payload.cityId;
+      }),
+      // Update DB history
       tap(ip => {
         const history = context.getState().sessionHistory;
         const { time, cityId } = history[history.length - 1];
