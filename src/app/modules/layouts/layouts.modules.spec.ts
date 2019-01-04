@@ -1,4 +1,4 @@
-import { LayoutsModules } from './layouts.module';
+import { LayoutsModules } from './layouts.modules';
 
 describe('LayoutsModule', () => {
   let layoutsModules = LayoutsModules;

@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { AppServivesModules } from '../modules/testingServices';
+import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
 import { HistoryService } from './history.service';
 
 describe('HistoryService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [ AppServivesModules ]
+    imports: [ TestingServicesRequiredModules ]
   }));
 
   it('should be created', () => {

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AppServivesModules } from '../modules/testingServices';
+import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
 import { OwmDataService } from './owm-data.service';
 import { NgxsModule } from '@ngxs/store';
 import { AppHistoryState } from '../states/app.state';
@@ -8,7 +8,7 @@ describe('OwmDataService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
       imports: [
-        AppServivesModules,
+        TestingServicesRequiredModules,
         NgxsModule.forRoot([AppHistoryState])
       ]
     })

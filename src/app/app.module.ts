@@ -6,7 +6,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AngularMaterialModule } from './modules/angular-material/angular-material.module';
-import { LayoutsModules } from './modules/layouts/layouts.module';
+import { LayoutsModules } from './modules/layouts/layouts.modules';
 
 import { environment } from '../environments/environment';
 import { SortCitiesPipe } from './pipes/sort-cities.pipe';

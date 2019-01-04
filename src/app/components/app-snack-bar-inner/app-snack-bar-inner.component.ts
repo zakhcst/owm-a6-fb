@@ -10,8 +10,7 @@ export class AppSnackBarInnerComponent implements OnInit {
 
   constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
 }
 

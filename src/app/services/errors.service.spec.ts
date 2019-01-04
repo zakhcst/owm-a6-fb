@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { AppServivesModules } from '../modules/testingServices';
+import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
 import { ErrorsService } from './errors.service';
 import { NgxsModule } from '@ngxs/store';
 import { AppErrorsState } from '../states/app.state';
 
 describe('ErrorsService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [ AppServivesModules,
+    imports: [ TestingServicesRequiredModules,
       NgxsModule.forRoot([ AppErrorsState])
     ],
   }));
