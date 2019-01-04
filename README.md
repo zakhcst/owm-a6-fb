@@ -1,4 +1,4 @@
-# OWM 5 Day Forecast
+## Open Weather Maps(OWM) 5 Day Forecast
 
 ### Angular 6, Angular Material and Firebase based project.
 
@@ -25,18 +25,18 @@ Firebase
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.4.
 
-## Development server
+### Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Running unit tests
+### Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Link
+### Link
 
 Development build is depolyed at: https://owm-a6-fb.firebaseapp.com/
 
-## Preview screen
+### Preview screen
 
 ![alt text](https://raw.githubusercontent.com/zakhcst/owm-a6-fb/master/preview1.png)
