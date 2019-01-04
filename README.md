@@ -2,26 +2,29 @@
 
 ### Angular 6, Angular Material and Firebase based project.
 
-Additional libraries used:
+Libraries
 
 - FlexLayout
-- Ngxs
+- Angular Material
+- AngularFire2
 
-Features:
 
-Angular
+Features
 
-- components
-- services
-- custom pipes
-- rxjs
+* Angular
+  - components
+  - services
+  - custom pipes
+  - rxjs
+  - ngxs
 
-Firebase
 
-- realtime database
-- cloud functions (NodeJS v8)
-- docker container facility for testing locally (NodeJS v8 )
-- hosting
+* Firebase
+
+  - realtime database
+  - cloud functions (NodeJS v8)
+  - docker facility for testing cloud functions locally (NodeJS v8 )
+  - hosting
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.4.
 
@@ -37,6 +40,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Development build is depolyed at: https://owm-a6-fb.firebaseapp.com/
 
-### Preview screen
+
+### Preview
 
 ![alt text](https://raw.githubusercontent.com/zakhcst/owm-a6-fb/master/preview1.png)

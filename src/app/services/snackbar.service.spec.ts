@@ -47,16 +47,15 @@ describe('SnackbarService', () => {
     expect(service).toBeTruthy();
   });
 
-  // it('should init q === [] && should increase on second call before timeout', async(() => {
-  //   const ref = service.ref(testMessage);
-  //   ref.afterDismissed().subscribe(
-  //     () => {
-  //       expect(service.q.length).toBe(1, 'after 2500 OK');
-  //       console.log('after 2500');
-  //     },
-  //     err => {
-  //       console.log('after 2500', err);
-  //     }
-  //   );
-  // }));
+  it('should init q === [] && should increase on second call before timeout', async(() => {
+    const ref = service.ref(testMessage);
+    ref.afterDismissed().subscribe(() => {
+        expect(service.q.length).toBe(1, 'after 2500 OK');
+        console.log('after 2500');
+      },
+      err => {
+        console.log('after 2500', err);
+      }
+    );
+  }));
 });
