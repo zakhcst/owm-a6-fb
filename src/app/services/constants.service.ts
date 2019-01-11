@@ -38,6 +38,7 @@ export class ConstantsService {
   public static readonly pressureIconsUrl = 'assets/icons8-atmospheric-pressure-16.png';
   public static readonly humidityIconsUrl = 'assets/icons8-hygrometer-16.png';
   public static readonly arrow000Deg = String.fromCodePoint(8593);
+  public static readonly snackbarDuration = 2500;
 
 
   public static readonly timeTemplate: TimeTemplate[] = [

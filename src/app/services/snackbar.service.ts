@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
-
+import { ConstantsService } from './constants.service';
+import { from } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -33,9 +34,9 @@ export class SnackbarService {
     }
   }
 
-  ref(data) {
+  ref(data: any): MatSnackBarRef<AppSnackBarInnerComponent> {
     return this._matSnackbar.openFromComponent(AppSnackBarInnerComponent, {
-      duration: 2500 * (data.class === 'snackbar__error' ? 2 : 1),
+      duration: ConstantsService.snackbarDuration * (data.class === 'snackbar__error' ? 2 : 1),
       data,
       horizontalPosition: 'right',
       verticalPosition: 'bottom',
