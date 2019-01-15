@@ -12,26 +12,20 @@ import { asyncScheduler } from 'rxjs';
 
 describe('SnackbarService', () => {
   let service: SnackbarService;
-  let originalJasmineTimeout: any;
   const testMessage = { message: `Message: Test`, class: 'snackbar__info' };
-  const calcDelay = () => ConstantsService.snackbarDuration *  (testMessage.class === 'snackbar__error' ? 2 : 1);
-  const refStub =  of('Streamed on afterDismissed()', asyncScheduler).pipe(delay(calcDelay()));
+  const calcDelay = () =>
+    ConstantsService.snackbarDuration *
+    (testMessage.class === 'snackbar__error' ? 2 : 1);
+  const refStub = of('Streamed on afterDismissed()', asyncScheduler).pipe(
+    delay(calcDelay())
+  );
   const mockRef = () => {
-      return {
-        afterDismissed() {
-          return refStub;
-        }
-      };
+    return {
+      afterDismissed() {
+        return refStub;
+      }
+    };
   };
-
-  beforeAll(() => {
-    originalJasmineTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-  });
-
-  afterAll(function() {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalJasmineTimeout;
-  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -59,13 +53,13 @@ describe('SnackbarService', () => {
     const spy = spyOn(service, 'ref').and.callFake(mockRef);
 
     // Setting 3 elements
-    service.show({...testMessage});
+    service.show({ ...testMessage });
     expect(spy).toHaveBeenCalled();
     expect(service.q.length).toBe(1);
-    service.show({...testMessage});
+    service.show({ ...testMessage });
     expect(spy).toHaveBeenCalled();
     expect(service.q.length).toBe(2);
-    service.show({...testMessage});
+    service.show({ ...testMessage });
     expect(spy).toHaveBeenCalled();
     expect(service.q.length).toBe(3);
 
