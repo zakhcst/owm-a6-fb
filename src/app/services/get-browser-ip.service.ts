@@ -8,15 +8,13 @@ import { switchMap, shareReplay, retry } from 'rxjs/operators';
 })
 export class GetBrowserIpService {
   private _cache$: Observable<string>;
-  countCache = 0;
-  countRequests = 0;
 
   constructor(private _http: HttpClient) {}
 
   getIP() {
     if (!this._cache$) {
       this._cache$ = this.requestIP().pipe(
-        switchMap(ipString => {
+        switchMap((ipString: string) => {
           if (this.validateIP(ipString)) {
             return of(ipString);
           }
@@ -28,16 +26,13 @@ export class GetBrowserIpService {
     return this._cache$;
   }
 
-  requestIP() {
+  requestIP(): Observable<string> {
     return this._http
       .get(ConstantsService.getIpUrl, { responseType: 'text' })
       .pipe(retry(3));
   }
 
-  validateIP(testString) {
-    return (
-      ConstantsService.ipv4RE.test(testString) ||
-      ConstantsService.ipv6RE.test(testString)
-    );
+  validateIP(testString: string): boolean {
+    return ConstantsService.ipv4RE.test(testString);
   }
 }

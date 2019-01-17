@@ -3,6 +3,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { ConstantsService } from './constants.service';
 import { Store } from '@ngxs/store';
 import { SetErrorsState } from '../states/app.actions';
+import { AppErrorPayloadModel, ErrorRecordModel } from '../states/app.models';
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +11,18 @@ import { SetErrorsState } from '../states/app.actions';
 export class ErrorsService {
   constructor(private _db: AngularFireDatabase, private _store: Store) {}
 
-  setDataToFB(data) {
+  setDataToFB(ip: string, data: ErrorRecordModel) {
     const refKey =
       ConstantsService.errorsLog +
       '/' +
-      data.ip.replace(/\.|\:/g, '-') +
+      (ip ? ip.replace(/\.|\:/g, '-') : 'ERROR') +
       '/' +
       data.time;
     const ref = this._db.object(refKey);
     return ref.set(data.logMessage);
   }
 
-  add({ userMessage, logMessage } ) {
-    this._store.dispatch(new SetErrorsState({ userMessage, logMessage }));
+  add(messages: AppErrorPayloadModel ) {
+    this._store.dispatch(new SetErrorsState(messages));
   }
 }

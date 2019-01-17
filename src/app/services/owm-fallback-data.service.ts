@@ -1,27 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ConstantsService } from './constants.service';
 import { catchError } from 'rxjs/operators';
 import { ErrorsService } from './errors.service';
-import { throwError } from 'rxjs';
+import { throwError, Observable } from 'rxjs';
+import { OwmDataModel } from '../models/owm-data.model';
 @Injectable({
   providedIn: 'root'
 })
 export class OwmFallbackDataService {
   constructor(private _http: HttpClient, private _errors: ErrorsService) {}
 
-  getData() {
-    return this.requestData().pipe(
+  getData(): Observable<OwmDataModel> {
+    return this._http.get<OwmDataModel>(ConstantsService.owmFallbackData).pipe(
+      // logs error at this level and rethrows for component err log
       catchError(err => {
         this._errors.add({
           userMessage: 'Connection or service problem',
-          logMessage: 'OwmFallbackDataService ' + err.message
+          logMessage: 'OwmFallbackDataService: getData: ' + err.message
         });
-        return throwError(new Error(err));
+        return throwError(err);
       }));
-  }
-
-  requestData() {
-    return this._http.get(ConstantsService.owmFallbackData);
   }
 }

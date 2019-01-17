@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
-import { from } from 'rxjs';
+import { SnackbarDataModel } from '../models/snackbar.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,7 +19,7 @@ export class SnackbarService {
   // The message is shown when it is at 0 position in the q[], only.
   // The two cases are when called from the client or invoked on dismissing the previous.
   // Otherwise just pishes the new message to the q.
-  show(data) {
+  show(data: SnackbarDataModel) {
     if (this.q[0] !== data) {
       this.q.push(data);
     }
@@ -34,7 +34,7 @@ export class SnackbarService {
     }
   }
 
-  ref(data: any): MatSnackBarRef<AppSnackBarInnerComponent> {
+  ref(data: SnackbarDataModel): MatSnackBarRef<AppSnackBarInnerComponent> {
     return this._matSnackbar.openFromComponent(AppSnackBarInnerComponent, {
       duration: ConstantsService.snackbarDuration * (data.class === 'snackbar__error' ? 2 : 1),
       data,

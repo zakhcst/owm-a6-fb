@@ -7,6 +7,7 @@ import { ErrorsService } from './errors.service';
 @Injectable({
   providedIn: 'root'
 })
+
 export class OwmStatsService {
   constructor(
     private _db: AngularFireDatabase,

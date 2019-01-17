@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { of, from } from 'rxjs';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { switchMap, catchError, map, tap } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
 import { CitiesService } from './cities.service';
 import { OwmFallbackDataService } from './owm-fallback-data.service';
 import { ErrorsService } from './errors.service';
+import { OwmDataModel } from '../models/owm-data.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,11 +24,11 @@ export class OwmDataService {
   // in order to prevent exceeding OWM requsts dev quote.
   // The additional logic for processing/reformating the data
   // is required in the front end in order to avoid
-  // http requests from CF
-  getData(cityId) {
+  // http requests from Firevase Cloud Functions
+  getData(cityId: string) {
     return this._cities.updateReads(cityId).pipe(
       switchMap(() => from(this._fb.getData(cityId))),
-      switchMap((fbdata: any) => {
+      switchMap((fbdata: OwmDataModel) => {
         if (fbdata !== null && this.isNotExpired(fbdata)) {
           return of(fbdata);
         }
@@ -42,16 +44,15 @@ export class OwmDataService {
     );
   }
 
-  requestNewOwmData(cityId) {
+  requestNewOwmData(cityId: string) {
     return this._owm.getData(cityId).pipe(
-      map(res => this.setListByDate(res)),
-      switchMap(res => from(this._fb.setData(cityId, res)))
+      map((res: OwmDataModel) => this.setListByDate(res)),
+      switchMap(res => from(this._fb.setData(cityId, res))),
     );
   }
 
-  setListByDate(data) {
-    data = data || { list: [] };
-    data.listByDate = data.list.reduce((accumulator, item) => {
+  setListByDate(data: OwmDataModel): OwmDataModel {
+    data.listByDate = data.list.reduce((accumulator: any, item: any) => {
       const dateObj = new Date(item.dt * 1000);
       const hour = dateObj.getUTCHours();
       const date = dateObj.setHours(0);
@@ -64,19 +65,18 @@ export class OwmDataService {
       }
       return accumulator;
     }, {});
-    // 'data.list' is kept for testing only, otherwise is not needed anymore
     data.updated = new Date().valueOf();
     return data;
   }
 
-  isNotExpired(data): boolean {
-    // expired data is when [0] is older than 3 hours
+  isNotExpired(data: OwmDataModel): boolean {
+    // expired data is when either [0] || .updated is older than 3 hours
     const now = new Date().valueOf();
-    const firstSample =
-      (data.list && data.list.length > 0 && data.list[0].dt
-        ? data.list[0].dt
-        : 0) * 1000;
-    const diff = now - (data.updated || firstSample);
+    const firstDateTime =
+      data.list && data.list.length > 0 && data.list[0].dt
+        ? data.list[0].dt * 1000
+        : 0;
+    const diff = now - (data.updated || firstDateTime || 0);
     return diff < 3 * 3600 * 1000; // 3 hours
   }
 }

@@ -35,7 +35,8 @@ import { AppSnackBarInnerComponent } from './components/app-snack-bar-inner/app-
     BrowserAnimationsModule,
     AngularMaterialModule,
     LayoutsModules,
-    NgxsModule.forRoot([AppHistoryState, AppErrorsState]),
+    NgxsModule.forRoot([AppHistoryState, AppErrorsState],
+      { developmentMode: !environment.production }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot()
   ],

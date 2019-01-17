@@ -7,8 +7,7 @@ import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/t
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
 import { delay } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { asyncScheduler } from 'rxjs';
+import { of, asyncScheduler } from 'rxjs';
 
 describe('SnackbarService', () => {
   let service: SnackbarService;
@@ -54,13 +53,13 @@ describe('SnackbarService', () => {
 
     // Setting 3 elements
     service.show({ ...testMessage });
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledTimes(1);
     expect(service.q.length).toBe(1);
     service.show({ ...testMessage });
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledTimes(1);
     expect(service.q.length).toBe(2);
     service.show({ ...testMessage });
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledTimes(1);
     expect(service.q.length).toBe(3);
 
     // tail delay

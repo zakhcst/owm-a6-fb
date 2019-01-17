@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OwmDataService } from '../../services/owm-data.service';
 import { Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Store } from '@ngxs/store';
-import { SetHistoryState } from '../../states/app.actions';
+
 import { OwmStats } from '../../models/owm-stats.model';
 import { TimeTemplate } from '../../models/hours.model';
 import { ConstantsService } from '../../services/constants.service';
 import { CitiesService } from '../../services/cities.service';
+import { CitiesModel } from '../../models/cities.model';
 import { OwmStatsService } from '../../services/owm-stats.service';
 import { GetBrowserIpService } from '../../services/get-browser-ip.service';
 import { ErrorsService } from '../../services/errors.service';
+import { HistoryService } from '../../services/history.service';
 
 @Component({
   selector: 'app-forecast',
@@ -26,12 +27,12 @@ export class ForecastComponent implements OnInit {
   iconPressure: string = ConstantsService.pressureIconsUrl;
   arrow000Deg: string = ConstantsService.arrow000Deg;
   loadingOwmData = true;
-  loadingCities = true ;
+  loadingCities = true;
   loadingStats = true;
   loadingError = false;
   weatherDataSubscription: Subscription;
   cities$: Observable<{}>;
-  cities: {};
+  cities: CitiesModel;
   stats: OwmStats;
   statsSubscription: Subscription;
   weatherData: any;
@@ -42,7 +43,7 @@ export class ForecastComponent implements OnInit {
     private _cities: CitiesService,
     private _data: OwmDataService,
     private _owmStats: OwmStatsService,
-    private _store: Store,
+    private _history: HistoryService,
     private _ip: GetBrowserIpService,
     private _errors: ErrorsService
   ) {}
@@ -74,13 +75,11 @@ export class ForecastComponent implements OnInit {
         data => {
           this.weatherData = data;
           this.loadingOwmData = false;
-          this._store.dispatch(
-            new SetHistoryState({
-              cityId: this.selectedCityId,
-              cityName: this.cities[this.selectedCityId].name,
-              countryISO2: this.cities[this.selectedCityId].iso2
-            })
-          );
+          this._history.add({
+            cityId: this.selectedCityId,
+            cityName: this.cities[this.selectedCityId].name,
+            countryISO2: this.cities[this.selectedCityId].iso2,
+          });
         },
         err => {
           this.loadingOwmData = false;
@@ -88,7 +87,7 @@ export class ForecastComponent implements OnInit {
           this._errors.add({
             userMessage:
               'Connection or service problem. Please reload or try later.',
-            logMessage: 'ForecastComponent:onChange:subscribe ' + err.message
+            logMessage: 'ForecastComponent:onChange:subscribe ' + err.message,
           });
         },
         () => this.weatherDataSubscription.unsubscribe()

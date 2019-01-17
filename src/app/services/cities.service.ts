@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { switchMap, take, share } from 'rxjs/operators';
-import { City } from '../models/city.model';
+import { CityModel, CitiesModel } from '../models/cities.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +10,15 @@ import { City } from '../models/city.model';
 export class CitiesService {
   constructor(private _db: AngularFireDatabase) {}
 
-  getData() {
-    return from(this._db.object('/cities').valueChanges()).pipe(share());
+  getData(): Observable<CitiesModel> {
+    return from(this._db.object<CitiesModel>('/cities').valueChanges()).pipe(share());
   }
 
-  updateReads(cityId) {
+  updateReads(cityId: string) {
     const ref = this._db.object(`/cities/${cityId}`);
     return ref.valueChanges().pipe(
       take(1),
-      switchMap((city: City) => {
+      switchMap((city: CityModel) => {
         return from(ref.update({ r: (city.r || 0) + 1 }));
       })
     );

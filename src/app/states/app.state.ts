@@ -1,12 +1,16 @@
 import { State, Action, StateContext } from '@ngxs/store';
 import { SetHistoryState, SetErrorsState } from './app.actions';
-import { AppHistoryModel, HistoryRecordModel, AppErrorsStateModel, ErrorRecordModel } from './app.models';
+import {
+  AppHistoryModel,
+  HistoryRecordModel,
+  AppErrorsStateModel,
+  ErrorRecordModel
+} from './app.models';
 import { GetBrowserIpService } from '../services/get-browser-ip.service';
 import { SnackbarService } from '../services/snackbar.service';
-import { tap, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { HistoryService } from '../services/history.service';
 import { ErrorsService } from '../services/errors.service';
-import { of } from 'rxjs';
 
 const defaultActivity = {
   ip: '',
@@ -30,10 +34,13 @@ export class AppHistoryState {
   ) {}
 
   @Action(SetHistoryState)
-  setHistoryState(context: StateContext<AppHistoryModel>, action: SetHistoryState) {
+  setHistoryState(
+    context: StateContext<AppHistoryModel>,
+    action: SetHistoryState
+  ) {
     return this._ip.getIP().pipe(
       // Update local history state
-      tap(ip => {
+      switchMap(ip => {
         const newEntry: HistoryRecordModel = {
           cityId: action.payload.cityId,
           time: new Date().valueOf()
@@ -43,22 +50,18 @@ export class AppHistoryState {
           sessionHistory: [...context.getState().sessionHistory, newEntry]
         };
         context.patchState(update);
-        this._snackbar.show({ message: `Selected: ${action.payload.cityName}, ${action.payload.countryISO2}` , class: 'snackbar__info'});
-      }),
-      // Update localStorage
-      tap(ip => {
+        this._snackbar.show({
+          message: `Selected: ${action.payload.cityName}, ${
+            action.payload.countryISO2
+          }`,
+          class: 'snackbar__info'
+        });
         localStorage.lastCityId = action.payload.cityId;
-      }),
-      // Update DB history
-      tap(ip => {
-        const history = context.getState().sessionHistory;
-        const { time, cityId } = history[history.length - 1];
-        return this._history.setData({ ip, time, cityId });
+        return this._history.setDataToFB(ip, newEntry);
       })
     );
   }
 }
-
 
 const defaultErrorsRecord = {
   ip: '',
@@ -82,7 +85,10 @@ export class AppErrorsState {
   ) {}
 
   @Action(SetErrorsState)
-  setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
+  setErrorsState(
+    context: StateContext<AppErrorsStateModel>,
+    action: SetErrorsState
+  ) {
     return this._ip.getIP().pipe(
       switchMap(ip => {
         const newEntry: ErrorRecordModel = {
@@ -94,13 +100,11 @@ export class AppErrorsState {
           sessionErrors: [...context.getState().sessionErrors, newEntry]
         };
         context.patchState(update);
-        this._snackbar.show({ message: `Error: ${action.payload.userMessage}` , class: 'snackbar__error'});
-        return of(ip);
-      }),
-      switchMap(ip => {
-        const errors = context.getState().sessionErrors;
-        const { time, logMessage } = errors[errors.length - 1];
-        return this._errors.setDataToFB({ ip, time, logMessage });
+        this._snackbar.show({
+          message: `Error: ${action.payload.userMessage}`,
+          class: 'snackbar__error'
+        });
+        return this._errors.setDataToFB(ip, newEntry);
       })
     );
   }

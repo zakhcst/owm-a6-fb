@@ -1,10 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { City } from '../models/city.model';
-
-interface CityByKey {
-  key?: string;
-  value?: City;
-}
+import { CityByKey } from '../models/cities.model';
 
 @Pipe({
   name: 'sortCities'

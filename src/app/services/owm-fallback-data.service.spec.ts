@@ -1,14 +1,144 @@
 import { TestBed } from '@angular/core/testing';
 import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
+import {
+  HttpClientTestingModule,
+  HttpTestingController
+} from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
+
 import { OwmFallbackDataService } from './owm-fallback-data.service';
+import { of, asyncScheduler } from 'rxjs';
+import { ErrorsService } from './errors.service';
+import { getNewDataObject, MockErrorsService } from './testing.services.mocks';
+import { OwmDataModel } from '../models/owm-data.model';
+import { ConstantsService } from './constants.service';
 
 describe('OwmFallbackDataService', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [ TestingServicesRequiredModules ]
-  }));
+  let service: OwmFallbackDataService;
+  let mockErrorsService: MockErrorsService;
+  let httpClient: HttpClient;
+  let httpTestingController: HttpTestingController;
+
+  beforeEach(() => {
+    mockErrorsService = new MockErrorsService();
+
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, TestingServicesRequiredModules],
+      providers: [
+        {
+          provide: ErrorsService,
+          useValue: mockErrorsService
+        }
+      ]
+    });
+    httpClient = TestBed.get(HttpClient);
+    httpTestingController = TestBed.get(HttpTestingController);
+
+    service = TestBed.get(OwmFallbackDataService);
+  });
+
+  afterEach(() => {
+    httpTestingController.verify();
+  });
 
   it('should be created', () => {
-    const service: OwmFallbackDataService = TestBed.get(OwmFallbackDataService);
     expect(service).toBeTruthy();
+  });
+
+  it('should receive http request data', () => {
+    httpClient
+      .get<OwmDataModel>(ConstantsService.owmFallbackData)
+      .subscribe(data => expect(data).toEqual(getNewDataObject()));
+
+    const req = httpTestingController.expectOne(
+      ConstantsService.owmFallbackData
+    );
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(getNewDataObject());
+    httpTestingController.verify();
+  });
+
+  it('should return value', (done: DoneFn) => {
+    spyOn(service, 'getData').and.returnValue(of(getNewDataObject(), asyncScheduler));
+    service.getData().subscribe(response => {
+      expect(response).toEqual(getNewDataObject());
+      done();
+    });
+  });
+
+  it('should catch, log and re-throw network error', (done: DoneFn) => {
+    const errorMessage = 'Error message';
+    const mockError = new ErrorEvent('Network error', {
+      message: errorMessage
+    });
+    const spyMockErrorsServiceAdd = spyOn(
+      mockErrorsService,
+      'add'
+    ).and.callThrough();
+    expect(mockErrorsService.messages.length).toBe(0);
+
+    service.getData().subscribe(
+      response => {
+        fail('response should have failed');
+        done();
+      },
+      error => {
+        expect(spyMockErrorsServiceAdd).toHaveBeenCalledTimes(1);
+        expect(error.status).toBe(0);
+        expect(mockErrorsService.messages.length).toBe(1);
+        expect(mockErrorsService.messages[0].logMessage).toContain(
+          'OwmFallbackDataService: getData:'
+        );
+        expect(mockErrorsService.messages[0].logMessage).toContain(
+          error.message
+        );
+        done();
+      }
+    );
+
+    const req = httpTestingController.expectOne(
+      ConstantsService.owmFallbackData
+    );
+    expect(req.request.method).toEqual('GET');
+    req.error(mockError);
+    httpTestingController.verify();
+  });
+
+  it('should catch, log and re-throw server error', (done: DoneFn) => {
+    const errorMessage = 'Error message';
+    const spyMockErrorsServiceAdd = spyOn(
+      mockErrorsService,
+      'add'
+    ).and.callThrough();
+    expect(mockErrorsService.messages.length).toBe(0);
+
+    service.getData().subscribe(
+      response => {
+        fail('response should have failed');
+        done();
+      },
+      error => {
+        expect(spyMockErrorsServiceAdd).toHaveBeenCalledTimes(1);
+        expect(mockErrorsService.messages.length).toBe(1);
+        expect(error.status).toBe(404);
+        expect(mockErrorsService.messages[0].logMessage).toContain(
+          'OwmFallbackDataService: getData:'
+        );
+        expect(mockErrorsService.messages[0].logMessage).toContain(
+          error.message
+        );
+
+        done();
+      }
+    );
+
+    const req = httpTestingController.expectOne(
+      ConstantsService.owmFallbackData
+    );
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(errorMessage, { status: 404, statusText: 'Not Found' });
+    httpTestingController.verify();
   });
 });

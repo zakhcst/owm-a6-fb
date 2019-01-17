@@ -17,22 +17,6 @@ export class ConstantsService {
   public static readonly owmFallbackData = 'assets/owm-fallback-data.json';
   public static readonly getIpUrl = 'https://us-central1-owm-a6-fb.cloudfunctions.net/getip';
   public static readonly ipv4RE = new RegExp('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$');
-  public static readonly ipv6RE = new RegExp(`/^\s*((
-    ([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}
-    (:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|
-    (([0-9A-Fa-f]{1,4}:){5}
-    (((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|
-    (([0-9A-Fa-f]{1,4}:){4}
-    (((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|
-    (([0-9A-Fa-f]{1,4}:){3}
-    (((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|
-    (([0-9A-Fa-f]{1,4}:){2}
-    (((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|
-    (([0-9A-Fa-f]{1,4}:){1}
-    (((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|
-    (:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)
-    (\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/`, 'i');
-
   public static readonly owmIconsUrl = 'https://openweathermap.org/img/w/';
   public static readonly windIconsUrl = 'assets/icons8-windsock-16.png';
   public static readonly pressureIconsUrl = 'assets/icons8-atmospheric-pressure-16.png';
@@ -52,5 +36,4 @@ export class ConstantsService {
     { hour: 21, bgColor: '#5080dd', textColor: 'white'}
   ];
 
-  public static readonly defaultOwmData = 'assets/owm-data-sample.json';
 }

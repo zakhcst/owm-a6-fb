@@ -1,14 +1,147 @@
 import { TestBed } from '@angular/core/testing';
 import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
 import { OwmService } from './owm.service';
+import {
+  HttpClientTestingModule,
+  HttpTestingController
+} from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
+
+import { of, asyncScheduler } from 'rxjs';
+import { ErrorsService } from './errors.service';
+import { getNewDataObject, MockErrorsService } from './testing.services.mocks';
+import { OwmDataModel } from '../models/owm-data.model';
+import { ConstantsService } from './constants.service';
 
 describe('OwmService', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [ TestingServicesRequiredModules ]
-  }));
+  let service: OwmService;
+  let mockErrorsService: MockErrorsService;
+  let httpClient: HttpClient;
+  let httpTestingController: HttpTestingController;
+  const cityId = 'cityId';
+  const owmRequestUrl =
+    ConstantsService.default5DayForecastUrl +
+    '?id=' +
+    cityId +
+    '&units=' +
+    ConstantsService.defaultUnits +
+    '&APPID=' +
+    ConstantsService.defaultAPPID;
+
+  beforeEach(() => {
+    mockErrorsService = new MockErrorsService();
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, TestingServicesRequiredModules],
+      providers: [
+        {
+          provide: ErrorsService,
+          useValue: mockErrorsService
+        }
+      ]
+    });
+    httpClient = TestBed.get(HttpClient);
+    httpTestingController = TestBed.get(HttpTestingController);
+
+    service = TestBed.get(OwmService);
+  });
+
+  afterEach(() => {
+    httpTestingController.verify();
+  });
 
   it('should be created', () => {
-    const service: OwmService = TestBed.get(OwmService);
     expect(service).toBeTruthy();
+  });
+
+  it('should receive http request data', () => {
+    httpClient
+      .get<OwmDataModel>(owmRequestUrl)
+      .subscribe(data => expect(data).toEqual(getNewDataObject()));
+
+    const req = httpTestingController.expectOne(owmRequestUrl);
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(getNewDataObject());
+    httpTestingController.verify();
+  });
+
+  it('should return value', (done: DoneFn) => {
+    spyOn(service, 'getData').and.returnValue(
+      of(getNewDataObject(), asyncScheduler)
+    );
+    service.getData(cityId).subscribe(response => {
+      expect(response).toEqual(getNewDataObject());
+      done();
+    });
+  });
+
+  it('should catch, log and re-throw network error', (done: DoneFn) => {
+    const errorMessage = 'Error message';
+    const mockError = new ErrorEvent('Network error', {
+      message: errorMessage
+    });
+    const spyMockErrorsServiceAdd = spyOn(
+      mockErrorsService,
+      'add'
+    ).and.callThrough();
+    expect(mockErrorsService.messages.length).toBe(0);
+
+    service.getData(cityId).subscribe(
+      response => {
+        fail('response should have failed');
+        done();
+      },
+      error => {
+        expect(spyMockErrorsServiceAdd).toHaveBeenCalledTimes(1);
+        expect(error.status).toBe(0);
+        expect(mockErrorsService.messages.length).toBe(1);
+        expect(mockErrorsService.messages[0].logMessage).toContain(
+          'OwmService: getData:'
+        );
+        expect(mockErrorsService.messages[0].logMessage).toContain(
+          error.message
+        );
+        done();
+      }
+    );
+
+    const req = httpTestingController.expectOne(owmRequestUrl);
+    expect(req.request.method).toEqual('GET');
+    req.error(mockError);
+    httpTestingController.verify();
+  });
+
+  it('should catch, log and re-throw server error', (done: DoneFn) => {
+    const errorMessage = 'Error message';
+    const spyMockErrorsServiceAdd = spyOn(
+      mockErrorsService,
+      'add'
+    ).and.callThrough();
+    expect(mockErrorsService.messages.length).toBe(0);
+
+    service.getData(cityId).subscribe(
+      response => {
+        fail('response should have failed');
+        done();
+      },
+      error => {
+        expect(spyMockErrorsServiceAdd).toHaveBeenCalledTimes(1);
+        expect(mockErrorsService.messages.length).toBe(1);
+        expect(error.status).toBe(404);
+        expect(mockErrorsService.messages[0].logMessage).toContain(
+          'OwmService: getData:'
+        );
+        expect(mockErrorsService.messages[0].logMessage).toContain(
+          error.message
+        );
+        done();
+      }
+    );
+
+    const req = httpTestingController.expectOne(owmRequestUrl);
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(errorMessage, { status: 404, statusText: 'Not Found' });
+    httpTestingController.verify();
   });
 });
