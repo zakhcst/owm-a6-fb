@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConstantsService } from './constants.service';
 import { of, Observable } from 'rxjs';
-import { switchMap, shareReplay, retry } from 'rxjs/operators';
+import { switchMap, share, catchError } from 'rxjs/operators';
+import { ErrorsService } from './errors.service';
 @Injectable({
   providedIn: 'root'
 })
 export class GetBrowserIpService {
   private _cache$: Observable<string>;
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient, private _errors: ErrorsService) {}
 
   getIP() {
     if (!this._cache$) {
@@ -18,9 +19,17 @@ export class GetBrowserIpService {
           if (this.validateIP(ipString)) {
             return of(ipString);
           }
-          return of(null);
+          return of('ip-error');
         }),
-        shareReplay(1)
+        catchError(err => {
+          this._errors.add({
+            userMessage: 'Connection or service problem',
+            logMessage: 'GetBrowserIpService: getIP: ' + err.message
+          });
+          return of('ip-error');
+        }),
+        share(),
+
       );
     }
     return this._cache$;
@@ -28,8 +37,7 @@ export class GetBrowserIpService {
 
   requestIP(): Observable<string> {
     return this._http
-      .get(ConstantsService.getIpUrl, { responseType: 'text' })
-      .pipe(retry(3));
+      .get(ConstantsService.getIpUrl, { responseType: 'text' });
   }
 
   validateIP(testString: string): boolean {

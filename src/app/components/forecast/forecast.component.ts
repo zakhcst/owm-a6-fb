@@ -1,15 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { OwmDataService } from '../../services/owm-data.service';
-import { Observable, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { Observable, Subscription, forkJoin } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { OwmStats } from '../../models/owm-stats.model';
 import { TimeTemplate } from '../../models/hours.model';
+import { CitiesModel } from '../../models/cities.model';
+import { AppErrorPayloadModel } from 'src/app/states/app.models';
+
 import { ConstantsService } from '../../services/constants.service';
 import { CitiesService } from '../../services/cities.service';
-import { CitiesModel } from '../../models/cities.model';
 import { OwmStatsService } from '../../services/owm-stats.service';
 import { GetBrowserIpService } from '../../services/get-browser-ip.service';
+import { OwmDataService } from '../../services/owm-data.service';
 import { ErrorsService } from '../../services/errors.service';
 import { HistoryService } from '../../services/history.service';
 
@@ -26,71 +28,83 @@ export class ForecastComponent implements OnInit {
   iconHumidity: string = ConstantsService.humidityIconsUrl;
   iconPressure: string = ConstantsService.pressureIconsUrl;
   arrow000Deg: string = ConstantsService.arrow000Deg;
+
   loadingOwmData = true;
   loadingCities = true;
   loadingStats = true;
   loadingError = false;
-  weatherDataSubscription: Subscription;
-  cities$: Observable<{}>;
+
   cities: CitiesModel;
+  cities$: Observable<any>;
   stats: OwmStats;
   statsSubscription: Subscription;
-  weatherData: any;
   ip: string;
   ipSubscription: Subscription;
+  weatherData: any;
+  weatherData$: Observable<any>;
+  weatherDataSubscription: Subscription;
 
   constructor(
     private _cities: CitiesService,
     private _data: OwmDataService,
+    private _ip: GetBrowserIpService,
     private _owmStats: OwmStatsService,
     private _history: HistoryService,
-    private _ip: GetBrowserIpService,
     private _errors: ErrorsService
   ) {}
 
   ngOnInit() {
-    this.cities$ = this._cities.getData().pipe(
-      tap(cities => {
-        this.cities = cities;
-        this.loadingCities = false;
-      })
+    this._owmStats.getData().subscribe(
+      stats => {
+        this.stats = stats;
+        this.loadingStats = false;
+      },
+      err => this.addError('ngOnInit: statsSubscription', err.message)
     );
-    this.statsSubscription = this._owmStats.getData().subscribe(stats => {
-      this.stats = stats;
-      this.loadingStats = false;
-      this.statsSubscription.unsubscribe();
-    });
-    this.ipSubscription = this._ip.getIP().subscribe(ip => {
-      this.ip = ip;
-      this.ipSubscription.unsubscribe();
-    });
+
+    this.ipSubscription = this._ip.getIP().subscribe(
+      ip => {
+        this.ip = ip === 'ip-error' ? null : ip;
+        this.ipSubscription.unsubscribe();
+      },
+      err => this.addError('ngOnInit: ipSubscription', err.message)
+    );
     this.onChange();
   }
 
   onChange() {
     this.loadingOwmData = true;
-    this.weatherDataSubscription = this._data
-      .getData(this.selectedCityId)
-      .subscribe(
-        data => {
-          this.weatherData = data;
-          this.loadingOwmData = false;
-          this._history.add({
-            cityId: this.selectedCityId,
-            cityName: this.cities[this.selectedCityId].name,
-            countryISO2: this.cities[this.selectedCityId].iso2,
-          });
-        },
-        err => {
-          this.loadingOwmData = false;
-          this.loadingError = true;
-          this._errors.add({
-            userMessage:
-              'Connection or service problem. Please reload or try later.',
-            logMessage: 'ForecastComponent:onChange:subscribe ' + err.message,
-          });
-        },
-        () => this.weatherDataSubscription.unsubscribe()
-      );
+    this.cities$ = this._cities.getData().pipe(take(1));
+    this.weatherData$ = this._data.getData(this.selectedCityId).pipe(take(1));
+    const fjSubscription = forkJoin(this.cities$, this.weatherData$).subscribe(
+      responses => {
+        const [cities, data] = responses;
+        this.cities = cities;
+        this.loadingCities = false;
+        this.weatherData = data;
+        this.loadingOwmData = false;
+        const historyLog = {
+          cityId: this.selectedCityId,
+          cityName: cities[this.selectedCityId].name,
+          countryISO2: cities[this.selectedCityId].iso2
+        };
+        this._history.add(historyLog);
+        fjSubscription.unsubscribe();
+      },
+      err => {
+        this.loadingOwmData = false;
+        this.loadingError = true;
+        this.addError('ngOnInit: onChange: subscribe', err.message);
+        fjSubscription.unsubscribe();
+      }
+    );
+  }
+
+  addError(custom: string, errorMessage: string) {
+    const errorLog: AppErrorPayloadModel = {
+      userMessage: 'Connection or service problem. Please reload or try later.',
+      logMessage: `ForecastComponent: ${custom}: ${errorMessage}`
+    };
+    this._errors.add(errorLog);
   }
 }

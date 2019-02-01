@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
+import { RequiredModules } from '../modules/required-modules';
 
 import { NgxsModule, Store } from '@ngxs/store';
 import {
@@ -31,7 +31,7 @@ describe('ErrorsService', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        TestingServicesRequiredModules,
+        RequiredModules,
         NgxsModule.forRoot([AppErrorsState], {
           developmentMode: !environment.production
         }),

@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
+import { RequiredModules } from '../modules/required-modules';
 import { DataService } from './data.service';
 import { MockAngularFireService } from './testing.services.mocks';
 import { AngularFireModule } from '@angular/fire';
@@ -18,11 +18,11 @@ describe('DataService', () => {
   const testData: OwmDataModel = getNewDataObject();
   let serviceFB: any;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
 
     TestBed.configureTestingModule({
       imports: [
-        TestingServicesRequiredModules,
+        RequiredModules,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule
       ],
@@ -33,7 +33,7 @@ describe('DataService', () => {
     });
     service = TestBed.get(DataService);
     serviceFB = TestBed.get(AngularFireDatabase);
-  });
+  }));
 
   it('should be created', () => {
     expect(service).toBeTruthy();

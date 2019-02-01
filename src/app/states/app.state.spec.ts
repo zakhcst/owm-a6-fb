@@ -1,5 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
-import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
+import { RequiredModules } from '../modules/required-modules';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 import {
   AngularFireDatabaseModule,
@@ -21,31 +22,34 @@ import {
 import { NgxsModule, Store } from '@ngxs/store';
 import { SetHistoryState, SetErrorsState } from './app.actions';
 import { AppHistoryPayloadModel, AppErrorPayloadModel } from './app.models';
+import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 
 describe('State store', () => {
   let mockSnackbarService: any;
   let mockAngularFireService: any;
+  let mockGetBrowserIpService: MockGetBrowserIpService;
   let store: Store;
 
   const mockHistoryData: AppHistoryPayloadModel = {
-    cityId: 'cityId',
-    cityName: 'cityname',
-    countryISO2: 'iso2',
+    cityId: '728193',
+    cityName: 'Plovdiv',
+    countryISO2: 'BG'
   };
   const mockErrorData: AppErrorPayloadModel = {
-    userMessage: 'userMessage',
-    logMessage: 'logMessage',
+    userMessage: 'mockErrorData: AppErrorPayloadModel: value: userMessage',
+    logMessage: 'mockErrorData: AppErrorPayloadModel: value: logMessage'
   };
 
   beforeEach(async(() => {
     mockSnackbarService = new MockSnackbarService();
     mockAngularFireService = new MockAngularFireService();
-
+    mockGetBrowserIpService = new MockGetBrowserIpService();
     TestBed.configureTestingModule({
+      declarations: [AppSnackBarInnerComponent],
       imports: [
-        TestingServicesRequiredModules,
+        RequiredModules,
         NgxsModule.forRoot([AppHistoryState, AppErrorsState], {
-          developmentMode: !environment.production
+          developmentMode: true
         }),
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule
@@ -54,48 +58,69 @@ describe('State store', () => {
         Store,
         { provide: AngularFireDatabase, useValue: mockAngularFireService },
         { provide: SnackbarService, useValue: mockSnackbarService },
-        { provide: GetBrowserIpService, useValue: new MockGetBrowserIpService() }
+        { provide: GetBrowserIpService, useValue: mockGetBrowserIpService }
       ]
-    });
+    })
+      .overrideModule(BrowserDynamicTestingModule, {
+        set: {
+          entryComponents: [AppSnackBarInnerComponent]
+        }
+      })
+      .compileComponents();
 
     store = TestBed.get(Store);
   }));
 
-  it('should dispatch a new AppHistoryState ', async(() => {
+  afterEach(() => {
+    store = null;
+    mockSnackbarService = null;
+    mockAngularFireService = null;
+    mockGetBrowserIpService = null;
+  });
+
+  it('should dispatch a new AppHistoryState ', (done: DoneFn) => {
+  // it('should dispatch a new AppHistoryState ', async(() => {
     store
       .selectOnce(state => state.activity.sessionHistory)
-      .subscribe(state0 => {
+      .subscribe(
+        state0 => {
+          expect(state0.length).toBe(1);
+          expect(state0[0].cityId).toBe('Init');
+          store.dispatch(new SetHistoryState(mockHistoryData)).subscribe(() => {
+            store
+              .selectOnce(state => state.activity.sessionHistory)
+              .subscribe(state1 => {
+                expect(state1.length).toBe(2);
+                expect(state1[1].cityId).toBe(mockHistoryData.cityId);
+                done();
+              });
+          });
+        },
+        error => fail(error)
+      );
+    });
+  // }));
 
-        expect(state0.length).toBe(1);
-        expect(state0[0].cityId).toBe('Init');
-        store.dispatch(new SetHistoryState(mockHistoryData)).subscribe(() => {
-
-          store
-            .selectOnce(state => state.activity.sessionHistory)
-            .subscribe(state1 => {
-              expect(state1.length).toBe(2);
-              expect(state1[1].cityId).toEqual(mockHistoryData.cityId);
-            });
-        });
-      });
-  }));
-
-  it('should dispatch a new AppHistoryState', async(() => {
+  it('should dispatch a new AppErrorsState', (done: DoneFn) => {
+  // it('should dispatch a new AppErrorsState', async(() => {
     store
       .selectOnce(state => state.errors.sessionErrors)
-      .subscribe(state0 => {
-
-        expect(state0.length).toBe(1);
-        expect(state0[0].logMessage).toBe('Init');
-        store.dispatch(new SetErrorsState(mockErrorData)).subscribe(() => {
-
-          store
-            .selectOnce(state => state.errors.sessionErrors)
-            .subscribe(state1 => {
-              expect(state1.length).toBe(2);
-              expect(state1[1].logMessage).toEqual(mockErrorData.logMessage);
-            });
-        });
-      });
-  }));
+      .subscribe(
+        state0 => {
+          expect(state0.length).toBe(1);
+          expect(state0[0].logMessage).toBe('Init');
+          store.dispatch(new SetErrorsState(mockErrorData)).subscribe(() => {
+            store
+              .selectOnce(state => state.errors.sessionErrors)
+              .subscribe(state1 => {
+                expect(state1.length).toBe(2);
+                expect(state1[1].logMessage).toEqual(mockErrorData.logMessage);
+                done();
+              });
+          });
+        },
+        error => fail(error)
+      );
+  // }));
+  });
 });

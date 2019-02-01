@@ -1,3 +1,9 @@
+import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-export const LayoutsModules = [FlexLayoutModule];
+@NgModule({
+  imports: [FlexLayoutModule],
+  exports: [FlexLayoutModule],
+})
+
+export class LayoutsModules {}

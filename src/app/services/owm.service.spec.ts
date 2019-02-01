@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
+import { TestBed, async } from '@angular/core/testing';
+import { RequiredModules } from '../modules/required-modules';
 import { OwmService } from './owm.service';
 import {
   HttpClientTestingModule,
@@ -31,7 +31,7 @@ describe('OwmService', () => {
   beforeEach(() => {
     mockErrorsService = new MockErrorsService();
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, TestingServicesRequiredModules],
+      imports: [HttpClientTestingModule, RequiredModules],
       providers: [
         {
           provide: ErrorsService,
@@ -65,17 +65,22 @@ describe('OwmService', () => {
     httpTestingController.verify();
   });
 
-  it('should return value', (done: DoneFn) => {
+  // it('should return value', (done: DoneFn) => {
+  it('should return value', async(() => {
     spyOn(service, 'getData').and.returnValue(
       of(getNewDataObject(), asyncScheduler)
     );
-    service.getData(cityId).subscribe(response => {
-      expect(response).toEqual(getNewDataObject());
-      done();
-    });
-  });
+    service.getData(cityId).subscribe(
+      response => {
+        expect(response).toEqual(getNewDataObject());
+        // done();
+      },
+      error => fail(error)
+    );
+  }));
 
-  it('should catch, log and re-throw network error', (done: DoneFn) => {
+  // it('should catch, log and re-throw network error', (done: DoneFn) => {
+  it('should catch, log and re-throw network error', async(() => {
     const errorMessage = 'Error message';
     const mockError = new ErrorEvent('Network error', {
       message: errorMessage
@@ -89,7 +94,7 @@ describe('OwmService', () => {
     service.getData(cityId).subscribe(
       response => {
         fail('response should have failed');
-        done();
+        // done();
       },
       error => {
         expect(spyMockErrorsServiceAdd).toHaveBeenCalledTimes(1);
@@ -101,7 +106,7 @@ describe('OwmService', () => {
         expect(mockErrorsService.messages[0].logMessage).toContain(
           error.message
         );
-        done();
+        // done();
       }
     );
 
@@ -109,9 +114,10 @@ describe('OwmService', () => {
     expect(req.request.method).toEqual('GET');
     req.error(mockError);
     httpTestingController.verify();
-  });
+  }));
 
-  it('should catch, log and re-throw server error', (done: DoneFn) => {
+  // it('should catch, log and re-throw server error', (done: DoneFn) => {
+  it('should catch, log and re-throw server error', async(() => {
     const errorMessage = 'Error message';
     const spyMockErrorsServiceAdd = spyOn(
       mockErrorsService,
@@ -122,7 +128,7 @@ describe('OwmService', () => {
     service.getData(cityId).subscribe(
       response => {
         fail('response should have failed');
-        done();
+        // done();
       },
       error => {
         expect(spyMockErrorsServiceAdd).toHaveBeenCalledTimes(1);
@@ -134,7 +140,7 @@ describe('OwmService', () => {
         expect(mockErrorsService.messages[0].logMessage).toContain(
           error.message
         );
-        done();
+        // done();
       }
     );
 
@@ -143,5 +149,5 @@ describe('OwmService', () => {
 
     req.flush(errorMessage, { status: 404, statusText: 'Not Found' });
     httpTestingController.verify();
-  });
+  }));
 });

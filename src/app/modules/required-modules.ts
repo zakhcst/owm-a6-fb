@@ -8,35 +8,31 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { LayoutsModules } from './layouts/layouts.modules';
 import { environment } from 'src/environments/environment';
-import { MatSnackBarModule } from '@angular/material';
 import { NgxsModule } from '@ngxs/store';
 import { AppHistoryState, AppErrorsState } from '../states/app.state';
 
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
-    BrowserModule,
-    BrowserAnimationsModule,
     AngularMaterialModule,
     LayoutsModules,
-    MatSnackBarModule,
-    NgxsModule.forRoot([AppHistoryState, AppErrorsState])
+    NgxsModule.forRoot([AppHistoryState, AppErrorsState],
+      { developmentMode: !environment.production }),
   ],
   exports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AngularFireModule,
     AngularFireDatabaseModule,
-    BrowserModule,
-    BrowserAnimationsModule,
     AngularMaterialModule,
     LayoutsModules,
-    MatSnackBarModule,
     NgxsModule
   ]
 })
 
-export class TestingComponentsRequiredModules {}
+export class RequiredModules {}

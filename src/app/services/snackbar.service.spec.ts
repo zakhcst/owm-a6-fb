@@ -1,8 +1,8 @@
-import { TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { SnackbarService } from './snackbar.service';
-import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
-import { AngularMaterialModule } from '../modules/angular-material/angular-material.module';
+import { TestBed, tick, fakeAsync, async } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { SnackbarService } from './snackbar.service';
+import { RequiredModules } from '../modules/required-modules';
+import { AngularMaterialModule } from '../modules/angular-material/angular-material.module';
 
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
@@ -26,10 +26,10 @@ describe('SnackbarService', () => {
     };
   };
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AppSnackBarInnerComponent],
-      imports: [TestingServicesRequiredModules, AngularMaterialModule],
+      imports: [RequiredModules, AngularMaterialModule],
       providers: [SnackbarService]
     })
       .overrideModule(BrowserDynamicTestingModule, {
@@ -38,11 +38,11 @@ describe('SnackbarService', () => {
         }
       })
       .compileComponents();
-  });
+  }));
 
-  beforeEach(async () => {
+  beforeEach(async(() => {
     service = TestBed.get(SnackbarService);
-  });
+  }));
 
   it('should be created', () => {
     expect(service).toBeTruthy();

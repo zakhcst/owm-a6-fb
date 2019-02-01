@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { OwmStatsService } from './owm-stats.service';
-import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
+import { RequiredModules } from '../modules/required-modules';
 import {
   AngularFireDatabase,
   AngularFireDatabaseModule
@@ -18,11 +18,10 @@ describe('OwmStatsService', () => {
   const mockErrorsService = new MockErrorsService();
   const mockAngularFireService = new MockAngularFireService();
 
-  beforeEach(() => {
-
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        TestingServicesRequiredModules,
+        RequiredModules,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule
       ],
@@ -33,39 +32,42 @@ describe('OwmStatsService', () => {
       ]
     });
     service = TestBed.get(OwmStatsService);
-  });
+  }));
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fail when no data is received', (done: DoneFn) => {
+  // it('should fail when no data is received', (done: DoneFn) => {
+  it('should fail when no data is received', async(() => {
     mockErrorsService.messages = [];
     service.getData().subscribe(
       () => {
         fail();
-        done();
+        // done();
       },
-      err => {
+      error => {
         expect(mockErrorsService.messages.length).toBeTruthy(1);
-        done();
+        // done();
       }
     );
-  });
+  }));
 
-  it('it should get data', (done: DoneFn) => {
+  // it('it should get data', (done: DoneFn) => {
+  it('it should get data', async(() => {
     mockErrorsService.messages = [];
     mockAngularFireService.fbdata = 'test data';
     service.getData().subscribe(
-      (response) => {
+      response => {
         expect(mockErrorsService.messages.length).toBe(0);
         expect(response).toBe(mockAngularFireService.fbdata);
-        done();
+        // done();
       },
-      (err) => {
-        fail();
-        done();
-      }
+      // (err) => {
+      //   fail();
+      //   // done();
+      // }
+      error => fail(error)
     );
-  });
+  }));
 });

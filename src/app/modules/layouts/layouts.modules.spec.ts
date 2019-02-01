@@ -1,11 +1,7 @@
 import { LayoutsModules } from './layouts.modules';
 
-describe('LayoutsModule', () => {
-  let layoutsModules = LayoutsModules;
-
-  beforeEach(() => {
-    layoutsModules = LayoutsModules;
-  });
+describe('LayoutsModules', () => {
+  const layoutsModules = LayoutsModules;
 
   it('should create an instance', () => {
     expect(layoutsModules).toBeTruthy();

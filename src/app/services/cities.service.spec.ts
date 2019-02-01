@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
+import { RequiredModules } from '../modules/required-modules';
 import { MockAngularFireService } from './testing.services.mocks';
 import { CitiesService } from './cities.service';
 import {
@@ -12,56 +12,54 @@ import { CityModel } from '../models/cities.model';
 
 describe('CitiesService', () => {
   let service: CitiesService;
-  let mockAngularFireService: MockAngularFireService;
+  let angularFireService: MockAngularFireService;
   const testData: CityModel = {
-    name: 'nameString',
-    country: 'countryString',
-    iso2: 'iso2String',
+    name: 'testData: CityModel: nameString',
+    country: 'testData: CityModel: countryString',
+    iso2: 'testData: CityModel: iso2String'
   };
 
-  beforeEach(() => {
-    mockAngularFireService = new MockAngularFireService();
-
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        TestingServicesRequiredModules,
+        RequiredModules,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule
       ],
       providers: [
         CitiesService,
-        { provide: AngularFireDatabase, useValue: mockAngularFireService }
+        { provide: AngularFireDatabase, useClass: MockAngularFireService }
       ]
     });
     service = TestBed.get(CitiesService);
-  });
+    angularFireService = TestBed.get(AngularFireDatabase);
+  }));
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   it('should update reads', async(() => {
-    mockAngularFireService.fbdata = testData;
+    angularFireService.fbdata = testData;
     service.updateReads('cityId').subscribe(response1 => {
       expect(<string>(<any>response1)).toBe('Resolved');
-      expect(mockAngularFireService.fbdata.r).toBe(1);
+      expect(angularFireService.fbdata.r).toBe(1);
       service.updateReads('cityId').subscribe(response2 => {
         expect(<string>(<any>response2)).toBe('Resolved');
-        expect(mockAngularFireService.fbdata.r).toBe(2);
+        expect(angularFireService.fbdata.r).toBe(2);
       });
     });
   }));
 
   it('should get reads', async(() => {
-    mockAngularFireService.fbdata = testData;
+    angularFireService.fbdata = testData;
     service.updateReads('cityId').subscribe(response1 => {
       expect(<string>(<any>response1)).toBe('Resolved');
-      expect(mockAngularFireService.fbdata.r).toBe(1);
+      expect(angularFireService.fbdata.r).toBe(1);
 
       service.getData().subscribe(response2 => {
-        expect(<number><any>response2.r).toBe(1);
+        expect(<number>(<any>response2.r)).toBe(1);
       });
     });
   }));
-
 });

@@ -7,11 +7,12 @@ import { CityModel, CitiesModel } from '../models/cities.model';
 @Injectable({
   providedIn: 'root'
 })
+
 export class CitiesService {
   constructor(private _db: AngularFireDatabase) {}
 
   getData(): Observable<CitiesModel> {
-    return from(this._db.object<CitiesModel>('/cities').valueChanges()).pipe(share());
+    return from(this._db.object<CitiesModel>('/cities').valueChanges());
   }
 
   updateReads(cityId: string) {

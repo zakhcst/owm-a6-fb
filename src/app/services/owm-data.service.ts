@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of, from } from 'rxjs';
+import { of, from, Observable } from 'rxjs';
 import { switchMap, catchError, map, tap } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
@@ -21,10 +21,10 @@ export class OwmDataService {
   ) {}
 
   // Caching the data for 3h
-  // in order to prevent exceeding OWM requsts dev quote.
+  // in order to prevent exceeding OWM requests dev quote.
   // The additional logic for processing/reformating the data
   // is required in the front end in order to avoid
-  // http requests from Firevase Cloud Functions
+  // http requests out of Firebase Cloud Functions
   getData(cityId: string) {
     return this._cities.updateReads(cityId).pipe(
       switchMap(() => from(this._fb.getData(cityId))),
@@ -77,6 +77,6 @@ export class OwmDataService {
         ? data.list[0].dt * 1000
         : 0;
     const diff = now - (data.updated || firstDateTime || 0);
-    return diff < 3 * 3600 * 1000; // 3 hours
+    return diff < 3 * 3600 * 1000; // < 3 hours
   }
 }

@@ -15,10 +15,11 @@ export class SnackbarService {
   //   ref(data);
   // }
 
-  // Queue the messages and show them sequentially with full duration
+  // Queue the messages and show them sequentially until duration time of each one lapses.
   // The message is shown when it is at 0 position in the q[], only.
-  // The two cases are when called from the client or invoked on dismissing the previous.
-  // Otherwise just pishes the new message to the q.
+  // The two cases are when:
+  // client calls with a new message - just pushes the new message to the q
+  // or self invoked on dismissing the previous one and there are more messages.
   show(data: SnackbarDataModel) {
     if (this.q[0] !== data) {
       this.q.push(data);

@@ -9,19 +9,20 @@ describe('SnackBarInnerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppSnackBarInnerComponent ],
-      providers: [ { provide: MAT_SNACK_BAR_DATA, useValue: { message: 'Test Message' } } ],
+      declarations: [AppSnackBarInnerComponent],
+      providers: [
+        { provide: MAT_SNACK_BAR_DATA, useValue: { message: 'Test Message' } }
+      ]
     })
-    .compileComponents();
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(AppSnackBarInnerComponent);
+        component = fixture.componentInstance;
+      });
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AppSnackBarInnerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 });

@@ -4,7 +4,11 @@
   </div>
   <div fxLayout="column" fxFill class="content" *ngSwitchCase="false">
     <div fxLayout="column" fxLayout.gt-xs="row">
-      <span fxFlex="1 1" fxLayoutAlign="start center" *ngIf="!loadingCities && !loadingOwmData" fxFlexOrder.xs="3">
+      <span
+        fxFlex="1 1"
+        fxLayoutAlign="start center"
+        fxFlexOrder.xs="3"
+        *ngIf="!loadingCities && !loadingOwmData">
         <span [fxHide]="loadingOwmData">
           {{ weatherData?.updated ? 'Updated:' : 'Sample:' }}
           {{
@@ -24,7 +28,7 @@
         <span fxFlex fxFlexOrder.xs="2"></span>
         <mat-form-field fxFlexOrder.xs="1">
           <mat-select placeholder="City" [(value)]="selectedCityId" (selectionChange)="onChange()">
-            <mat-option *ngFor="let city of (cities$ | async | keyvalue | sortCities)" [value]="city.key">
+            <mat-option *ngFor="let city of (cities | keyvalue | sortCities)" [value]="city.key">
               <span fxFlex> {{ city.value.name }} </span>
               <span fxFlex fxLayoutAlign="end center">
                 {{ city.value.iso2 }}
@@ -86,9 +90,7 @@
                     '.png'
                   " />
                 {{ dataDaily.value[timeSlot.hour].weather[0].main }}
-                {{
-                dataDaily.value[timeSlot.hour].main.temp | number: '1.0-0'
-                }}&#176;C
+                {{ dataDaily.value[timeSlot.hour].main.temp | number: '1.0-0' }}&#176;C
               </div>
 
               <div fxFlex fxLayout="column">
@@ -96,10 +98,7 @@
                   <img [src]="iconPressure" />
                   <span fxFill class="table-secondary_data-opacity">
                     <span fxFlex="50%" fxLayoutAlign="end end">
-                      &nbsp;{{
-                      dataDaily.value[timeSlot.hour].main.pressure
-                      | number: '1.0-0'
-                      }}
+                      &nbsp;{{ dataDaily.value[timeSlot.hour].main.pressure | number: '1.0-0' }}
                     </span>
                     <span fxFlex fxLayoutAlign="start end">
                       &nbsp;<small>hPa</small>
@@ -115,12 +114,10 @@
                           'rotate(' +
                           dataDaily.value[timeSlot.hour].wind.deg +
                           'deg)'
-                        ">{{
-                        arrow000Deg }}</span>
-                      &nbsp;{{
-                      dataDaily.value[timeSlot.hour].wind.speed
-                      | number: '1.0-0'
-                      }}
+                        ">
+                        {{ arrow000Deg }}
+                      </span>
+                      &nbsp;{{ dataDaily.value[timeSlot.hour].wind.speed | number: '1.0-0' }}
                     </span>
                     <span fxFlex fxLayoutAlign="start end">
                       &nbsp;<small>m/s</small>

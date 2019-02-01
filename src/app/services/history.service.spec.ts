@@ -7,7 +7,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../../environments/environment.prod';
 
 import { TestBed, async } from '@angular/core/testing';
-import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
+import { RequiredModules } from '../modules/required-modules';
 
 import { HistoryService } from './history.service';
 import { AppHistoryState } from '../states/app.state';
@@ -36,7 +36,7 @@ describe('HistoryService', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        TestingServicesRequiredModules,
+        RequiredModules,
         NgxsModule.forRoot([AppHistoryState], {
           developmentMode: !environment.production
         }),

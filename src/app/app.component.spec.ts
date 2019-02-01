@@ -1,14 +1,14 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { ForecastComponent } from './components/forecast/forecast.component';
-import { TestingComponentsRequiredModules } from './modules/testing.components-required-modules';
+import { RequiredModules } from './modules/required-modules';
 import { SortCitiesPipe } from './pipes/sort-cities.pipe';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AppComponent, ForecastComponent, SortCitiesPipe],
-      imports: [TestingComponentsRequiredModules],
+      imports: [RequiredModules],
       providers: [AppComponent]
     }).compileComponents();
   }));

@@ -2,6 +2,7 @@ import { SortCitiesPipe } from './sort-cities.pipe';
 import { CityByKey } from '../models/cities.model';
 
 describe('SortCitiesPipe', () => {
+  let pipe: SortCitiesPipe;
   const cities: CityByKey[] = [
     { key: 'cityKey3', value: { name: 'name3', country: 'country3', iso2: 'iso23' }},
     { key: 'cityKey2', value: { name: 'name2', country: 'country2', iso2: 'iso22' }},
@@ -12,7 +13,10 @@ describe('SortCitiesPipe', () => {
     { key: 'cityKey2', value: { name: 'name2', country: 'country2', iso2: 'iso22' }},
     { key: 'cityKey3', value: { name: 'name3', country: 'country3', iso2: 'iso23' }},
   ];
-  const pipe = new SortCitiesPipe();
+
+  beforeEach(() => {
+    pipe = new SortCitiesPipe();
+  });
 
   it('create an instance', () => {
     expect(pipe).toBeTruthy();

@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { TestingServicesRequiredModules } from '../modules/testing.services-required-modules';
+import { RequiredModules } from '../modules/required-modules';
 import { GetBrowserIpService } from './get-browser-ip.service';
 import { of, asyncScheduler } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,7 @@ describe('GetBrowserIpService', () => {
   let httpTestingController: HttpTestingController;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, TestingServicesRequiredModules]
+      imports: [HttpClientTestingModule, RequiredModules]
     });
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
@@ -37,7 +37,9 @@ describe('GetBrowserIpService', () => {
   it('should receive http request data', () => {
     const validIP = '1.1.1.1';
 
-    httpClient.get(ConstantsService.getIpUrl, { responseType: 'text' }).subscribe(data => expect(data).toEqual(validIP));
+    httpClient
+      .get(ConstantsService.getIpUrl, { responseType: 'text' })
+      .subscribe(data => expect(data).toEqual(validIP));
     const req = httpTestingController.expectOne(ConstantsService.getIpUrl);
     expect(req.request.method).toEqual('GET');
 
@@ -47,9 +49,7 @@ describe('GetBrowserIpService', () => {
 
   it('should getIP', async(() => {
     const validIP = '1.1.1.1';
-    const spyRequestIP = spyOn(service, 'requestIP').and.returnValue(
-      of(validIP, asyncScheduler)
-    );
+    spyOn(service, 'requestIP').and.returnValue(of(validIP, asyncScheduler));
     service.getIP().subscribe(ip => {
       expect(ip).toBe(validIP);
     });
@@ -60,7 +60,7 @@ describe('GetBrowserIpService', () => {
     spyOn(service, 'requestIP').and.returnValue(of(invalidIP, asyncScheduler));
     service.getIP().subscribe(
       ip => {
-        expect(ip).toBe(null);
+        expect(ip).toBe('ip-error');
       },
       () => {
         fail();
